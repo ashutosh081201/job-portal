@@ -1,0 +1,16 @@
+export const getThemeStyles = (isDark) => ({
+  bg: isDark ? "#0f172a" : "#f1f5f9",
+  cardBg: isDark ? "#1e293b" : "#ffffff",
+  navBg: isDark ? "#020617" : "#1e293b",
+  navText: "#ffffff",
+  navMuted: isDark ? "#94a3b8" : "#cbd5e1",
+  border: isDark ? "#334155" : "#e2e8f0",
+  text: isDark ? "#f1f5f9" : "#1e293b",
+  muted: isDark ? "#94a3b8" : "#64748b",
+  subtext: isDark ? "#cbd5e1" : "#475569",
+  input: isDark ? "#0f172a" : "#ffffff",
+  inputBorder: isDark ? "#475569" : "#e2e8f0",
+  inputText: isDark ? "#f1f5f9" : "#1e293b",
+  label: isDark ? "#cbd5e1" : "#475569",
+  accentBorder: isDark ? "#1d4ed8" : "#bfdbfe",
+});

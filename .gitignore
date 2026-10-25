@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+coverage/
+dist/
+.DS_Store
+RESUME_NOTES.md
+
+# local resume uploads from before Cloudinary
+backend/uploads/
+
+# editor / tool state
+.vscode/
+.idea/
+.claude/
+*.log
