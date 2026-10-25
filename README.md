@@ -141,7 +141,7 @@ cd frontend && npm install && npm run dev
 ## Tests
 
 ```bash
-cd backend && npm test             # 160 API tests
+cd backend && npm test             # 164 API tests
 cd backend && npm run test:tz      # deadline tests again under IST and New York time zones
 cd frontend && npm test            # 58 unit tests
 cd frontend && npm run test:tz     # same, with the browser clock in New York

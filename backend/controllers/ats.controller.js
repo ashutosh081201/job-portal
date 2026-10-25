@@ -16,6 +16,14 @@ const isTransient = (err) =>
   [429, 500, 502, 503, 504].includes(err?.status) ||
   /\b(429|500|502|503|504)\b|overloaded|unavailable|ECONNRESET|ETIMEDOUT|fetch failed/i.test(err?.message || "");
 
+const isQuotaExhausted = (err) =>
+  (err?.status === 429 || /\b429\b/.test(err?.message || "")) &&
+  /quota|resource.?exhausted|limit: ?0/i.test(err?.message || "");
+
+// wrong or retired model name, or a model this API key cannot use
+const isModelUnavailable = (err) =>
+  err?.status === 404 || /\b404\b.*not found|is not found for API version|not supported for generateContent/i.test(err?.message || "");
+
 const asStringList = (value) =>
   Array.isArray(value) ? value.filter((v) => typeof v === "string") : [];
 
@@ -149,6 +157,19 @@ Just pure JSON like this:
       return parseAtsResponse(result.response.text());
     } catch (err) {
       if (err.expose) throw err;
+      // Gemini's errors carry the HTTP status and reason but never the API key
+      console.error(
+        `Gemini call failed (model ${GEMINI_MODEL}, attempt ${attempt}/${MAX_ATTEMPTS}):`,
+        err?.status ?? "no status",
+        String(err?.message || err).slice(0, 500),
+      );
+      // an exhausted quota will not recover in seconds, so don't retry it
+      if (isQuotaExhausted(err)) {
+        throw new HttpError(429, "The ATS checker has reached its AI usage limit for now. Please try again later.");
+      }
+      if (isModelUnavailable(err)) {
+        throw new HttpError(502, "The ATS checker is temporarily unavailable. Please try again later.");
+      }
       if (!isTransient(err)) throw err;
       if (attempt >= MAX_ATTEMPTS) {
         throw new HttpError(503, "The AI service is busy right now. Please try again in a minute.");

@@ -140,3 +140,66 @@ describe("job-linked ATS check and history", () => {
     expect((await request(app).post("/api/ats/check-job").set(auth(s)).send({ jobId: "nope" })).status).toBe(400);
   });
 });
+
+describe("AI failure diagnostics", () => {
+  const setup = async () => {
+    const s = await signup();
+    await createResume(s);
+    return s;
+  };
+  const check = (s) => request(app).post("/api/ats/check").set(auth(s)).send({ jobDescription: longDescription });
+
+  test("an exhausted quota (429) is not retried and says so plainly; the real error is logged", async () => {
+    const s = await setup();
+    const log = jest.spyOn(console, "error").mockImplementation(() => {});
+    generateContent.mockRejectedValue(
+      Object.assign(new Error("[429 Too Many Requests] You exceeded your current quota. limit: 0"), { status: 429 }),
+    );
+    const res = await check(s);
+    expect(res.status).toBe(429);
+    expect(res.body.message).toMatch(/usage limit/);
+    expect(generateContent).toHaveBeenCalledTimes(1);
+    expect(log.mock.calls[0].join(" ")).toMatch(/Gemini call failed .*429.*quota/);
+    expect(await AtsResult.countDocuments()).toBe(0);
+    generateContent.mockReset();
+    log.mockRestore();
+  });
+
+  test("a plain rate limit (429 without quota wording) is still retried", async () => {
+    const s = await setup();
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    generateContent
+      .mockRejectedValueOnce(Object.assign(new Error("[429 Too Many Requests] Please slow down"), { status: 429 }))
+      .mockResolvedValueOnce(aiReply(good));
+    expect((await check(s)).status).toBe(200);
+    expect(generateContent).toHaveBeenCalledTimes(2);
+    console.error.mockRestore();
+  });
+
+  test("a missing or retired model (404) is not retried and is logged with the model name", async () => {
+    const s = await setup();
+    const log = jest.spyOn(console, "error").mockImplementation(() => {});
+    generateContent.mockRejectedValue(
+      Object.assign(new Error("[404 Not Found] models/x is not found for API version v1beta"), { status: 404 }),
+    );
+    const res = await check(s);
+    expect(res.status).toBe(502);
+    expect(generateContent).toHaveBeenCalledTimes(1);
+    expect(log.mock.calls[0].join(" ")).toMatch(/model gemini-3\.6-flash.*404/);
+    generateContent.mockReset();
+    log.mockRestore();
+  });
+
+  test("overload that never clears: 3 attempts, each logged, then the busy message", async () => {
+    const s = await setup();
+    const log = jest.spyOn(console, "error").mockImplementation(() => {});
+    generateContent.mockRejectedValue(Object.assign(new Error("[503 Service Unavailable] The model is overloaded"), { status: 503 }));
+    const res = await check(s);
+    expect(res.status).toBe(503);
+    expect(res.body.message).toMatch(/busy/);
+    expect(generateContent).toHaveBeenCalledTimes(3);
+    expect(log).toHaveBeenCalledTimes(3);
+    generateContent.mockReset();
+    log.mockRestore();
+  });
+});
