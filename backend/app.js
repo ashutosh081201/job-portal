@@ -5,6 +5,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const rateLimit = require("express-rate-limit");
 const { sendError } = require("./utils/http");
+const { corsOptions } = require("./utils/cors");
 
 const app = express();
 
@@ -33,13 +34,9 @@ const authLimiter = rateLimit({
   skip: skipInTest,
 });
 
-// CLIENT_URL may list several origins: "https://a.vercel.app,http://localhost:5173".
+// CLIENT_URL lists the allowed origins (wildcards supported, see utils/cors.js).
 // Unset means any origin, which is fine because auth uses bearer tokens, not cookies.
-const allowedOrigins = (process.env.CLIENT_URL || "")
-  .split(",")
-  .map((o) => o.trim().replace(/\/$/, ""))
-  .filter(Boolean);
-app.use(cors(allowedOrigins.length ? { origin: allowedOrigins } : {}));
+app.use(cors(corsOptions(process.env.CLIENT_URL)));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ limit: "2mb", extended: true }));
 

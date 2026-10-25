@@ -126,7 +126,7 @@ cd frontend && npm install && npm run dev
 |---|---|
 | `MONGO_URI` | MongoDB connection string |
 | `JWT_SECRET` | Signs session and reset tokens |
-| `CLIENT_URL` | Comma-separated origins allowed by CORS (unset allows any) |
+| `CLIENT_URL` | Comma-separated origins allowed by CORS (unset allows any). `*` matches one hostname label, e.g. `https://job-portal-*-apps-6474.vercel.app` |
 | `APP_TIMEZONE` | When deadlines end (default `Asia/Kolkata`) |
 | `BREVO_API_KEY`, `EMAIL_FROM` | HTTPS email via Brevo; `EMAIL_FROM` must be a verified sender |
 | `EMAIL_USER`, `EMAIL_PASS` | Gmail SMTP fallback (app password) |
@@ -141,7 +141,7 @@ cd frontend && npm install && npm run dev
 ## Tests
 
 ```bash
-cd backend && npm test             # 144 API tests
+cd backend && npm test             # 160 API tests
 cd backend && npm run test:tz      # deadline tests again under IST and New York time zones
 cd frontend && npm test            # 58 unit tests
 cd frontend && npm run test:tz     # same, with the browser clock in New York
@@ -157,7 +157,7 @@ The API runs on Render, the frontend on Vercel, and the database on a MongoDB At
 
 **MongoDB Atlas.** Create a free cluster and a database user. Under *Network Access*, allow `0.0.0.0/0`: Render's free tier has no fixed outbound IP, so this is the only option, and access is still protected by the database user's password. Atlas pauses free clusters after long inactivity. If the API's health check reports the database as disconnected, resume the cluster in Atlas.
 
-**Render (API).** Create a *Blueprint* from this repo and Render will read [`render.yaml`](render.yaml): root `backend`, `npm ci --omit=dev`, `npm start`, health check at `/api/health`. Fill in the secrets it asks for. Set `CLIENT_URL` to the Vercel URL once you have it. The free instance sleeps after about 15 minutes of inactivity, so the first request after that takes around a minute.
+**Render (API).** Create a *Blueprint* from this repo and Render will read [`render.yaml`](render.yaml): root `backend`, `npm ci --omit=dev`, `npm start`, health check at `/api/health`. Fill in the secrets it asks for. Set `CLIENT_URL` to the Vercel production URL plus a pattern for Vercel's per-deployment URLs, e.g. `https://job-portal-rho-ruby.vercel.app,https://job-portal-*-apps-6474.vercel.app`, so deployment and preview links can call the API too. The free instance sleeps after about 15 minutes of inactivity, so the first request after that takes around a minute.
 
 **Vercel (frontend).** Import the repo, set the root directory to `frontend` (Vercel detects Vite), and add `VITE_API_URL` pointing at the Render URL. [`frontend/vercel.json`](frontend/vercel.json) rewrites every path to `index.html` so refreshing a deep link like `/jobs/123` works.
 
