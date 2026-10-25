@@ -2,7 +2,9 @@
 
 A full-stack job portal where job seekers can find jobs, build a resume, and check how well that resume matches a job description, and where recruiters can post jobs and manage applicants.
 
-**Live demo:** _coming soon_ · **API health:** _coming soon_
+**Live demo:** https://job-portal-rho-ruby.vercel.app · **API health:** https://jobverse-api-wumw.onrender.com/api/health
+
+> The API runs on Render's free tier and sleeps when idle, so the first request after a quiet spell can take up to a minute.
 
 <!-- ASSUMPTION: the motivation paragraph below is a neutral placeholder. Rewrite it in your own words. -->
 I built JobVerse to work through a complete product end to end: two kinds of users with different permissions, email-verified sign-up, file uploads, an AI feature that has to cope with unreliable output, and dates that have to mean the same thing on the server and in the browser. It is built with the MERN stack and deployed on free tiers.
@@ -134,7 +136,7 @@ cd frontend && npm install && npm run dev
 
 | Frontend | Purpose |
 |---|---|
-| `VITE_API_URL` | API origin without `/api`, e.g. `https://jobverse-api.onrender.com` |
+| `VITE_API_URL` | API origin without `/api`, e.g. `https://jobverse-api-wumw.onrender.com` |
 
 ## Tests
 
