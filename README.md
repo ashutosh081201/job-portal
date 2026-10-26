@@ -60,15 +60,6 @@ Open http://localhost:5173. The sandbox uses an in-memory database with demo dat
 
 To run it against real services, copy `backend/.env.example` and `frontend/.env.example` to `.env`, fill them in, and use `npm run dev` in each folder.
 
-## Tests
-
-```bash
-cd backend && npm test      # API tests
-cd frontend && npm test     # hooks, helpers, context
-```
-
-The API tests hit real HTTP routes and go through the actual sign-up flow, but never touch real services: MongoDB runs in memory, and email, Cloudinary and Gemini are mocked. They cover auth, permissions (one user can't touch another's data), validation, search, and the date edge cases. Backend coverage is around 94%. `npm run test:tz` re-runs the date tests in other time zones.
-
 ## Deploying
 
 - **MongoDB Atlas:** free cluster, and allow `0.0.0.0/0` under Network Access (Render has no fixed IP). If the health check says the database is disconnected, the cluster has probably been paused for inactivity, so resume it.
