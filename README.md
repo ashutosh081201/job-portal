@@ -2,7 +2,7 @@
 
 A job portal I built with the MERN stack. Job seekers can search jobs, build a resume and check how well it matches a job description. Recruiters can post jobs and manage applicants.
 
-**[Live demo](https://job-portal-rho-ruby.vercel.app)** · [API health](https://jobverse-api-wumw.onrender.com/api/health)
+**[Live demo](https://job-portal-rho-ruby.vercel.app)**
 
 > It runs on free tiers, so the API sleeps when nobody's using it. If the first page load is slow, give it about a minute.
 
