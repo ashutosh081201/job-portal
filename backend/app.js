@@ -3,9 +3,9 @@ const cors = require("cors");
 const path = require("path");
 const multer = require("multer");
 const mongoose = require("mongoose");
-const rateLimit = require("express-rate-limit");
 const { sendError } = require("./utils/http");
 const { corsOptions } = require("./utils/cors");
+const { createRateLimiters } = require("./middleware/rateLimits");
 
 const app = express();
 
@@ -14,25 +14,8 @@ const app = express();
 app.set("trust proxy", 1);
 
 // rate limits are skipped under test so the suite can hit auth routes freely
-const skipInTest = () => process.env.NODE_ENV === "test";
-
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  message: { message: "Too many requests, please try again later" },
-  standardHeaders: true,
-  legacyHeaders: false,
-  skip: skipInTest,
-});
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: { message: "Too many attempts, please try again in 15 minutes" },
-  standardHeaders: true,
-  legacyHeaders: false,
-  skip: skipInTest,
-});
+// (tests/rateLimit.test.js exercises them with limits on)
+const limits = createRateLimiters({ skip: () => process.env.NODE_ENV === "test" });
 
 // CLIENT_URL lists the allowed origins (wildcards supported, see utils/cors.js).
 // Unset means any origin, which is fine because auth uses bearer tokens, not cookies.
@@ -40,10 +23,10 @@ app.use(cors(corsOptions(process.env.CLIENT_URL)));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ limit: "2mb", extended: true }));
 
-app.use("/api", generalLimiter);
+app.use("/api", limits.general);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use("/api/auth", authLimiter, require("./routes/auth.routes"));
+app.use("/api/auth", limits.authPerNetwork, limits.authPerAccount, require("./routes/auth.routes"));
 app.use("/api/jobs", require("./routes/job.routes"));
 app.use("/api/applications", require("./routes/application.routes"));
 app.use("/api/resume", require("./routes/resume.routes"));

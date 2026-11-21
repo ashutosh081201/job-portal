@@ -449,7 +449,7 @@ const Landing = () => {
               ))}
               {!user && (
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => navigate("/register?role=recruiter")}
                   style={{
                     marginTop: "24px",
                     width: "100%",

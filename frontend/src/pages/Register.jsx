@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import { useTheme } from "../context/ThemeContext";
 import { getThemeStyles } from "../utils/theme";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { isDark } = useTheme();
   const t = getThemeStyles(isDark);
 
@@ -13,7 +14,8 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    role: "jobseeker",
+    // "Sign Up as Recruiter" on the landing page links here with ?role=recruiter
+    role: searchParams.get("role") === "recruiter" ? "recruiter" : "jobseeker",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

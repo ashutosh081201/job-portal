@@ -941,7 +941,8 @@ const JobDetail = () => {
               fontWeight: "600",
             }}
           >
-            You have already applied for this job
+            {/* right after applying, confirm it; on later visits, say so */}
+            {success || "You have already applied for this job"}
           </div>
         )}
 
@@ -981,22 +982,6 @@ const JobDetail = () => {
                 {error}
               </div>
             )}
-            {success && (
-              <div
-                style={{
-                  background: isDark ? "#14532d" : "#f0fdf4",
-                  border: "1px solid #22c55e",
-                  borderRadius: "8px",
-                  padding: "10px 12px",
-                  color: "#22c55e",
-                  fontSize: "14px",
-                  marginBottom: "16px",
-                }}
-              >
-                {success}
-              </div>
-            )}
-
             <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
               <button
                 onClick={() => setResumeOption("upload")}
