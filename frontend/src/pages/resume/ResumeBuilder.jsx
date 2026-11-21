@@ -41,9 +41,9 @@ const cleanEducationForSave = (education = []) => {
 const buildContactHTML = (personal) => {
   const items = [];
   if (personal.phone) items.push(personal.phone);
-  if (personal.email)
+  if (personal.email?.trim())
     items.push(
-      `<a href="mailto:${personal.email}" style="color:inherit;text-decoration:none;">${personal.email}</a>`,
+      `<a href="mailto:${personal.email.trim()}" style="color:inherit;text-decoration:none;">${personal.email.trim()}</a>`,
     );
   if (personal.linkedin) {
     const u = extractLinkedInUsername(personal.linkedin);

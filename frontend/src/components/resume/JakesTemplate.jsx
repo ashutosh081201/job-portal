@@ -29,10 +29,11 @@ const JakesTemplate = ({ data }) => {
   if (personal.phone) {
     contactItems.push({ text: personal.phone, href: null });
   }
-  if (personal.email) {
+  if (personal.email?.trim()) {
+    const email = personal.email.trim();
     contactItems.push({
-      text: personal.email,
-      href: `mailto:${personal.email}`,
+      text: email,
+      href: `mailto:${email}`,
     });
   }
   if (personal.linkedin) {
@@ -85,8 +86,11 @@ const JakesTemplate = ({ data }) => {
               {item.href ? (
                 <a
                   href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  // mailto: must open in place: in a new tab the browser hands an
+                  // empty tab to the mail handler (e.g. Gmail) instead of a draft
+                  {...(item.href.startsWith("mailto:")
+                    ? {}
+                    : { target: "_blank", rel: "noopener noreferrer" })}
                   style={linkStyle}
                 >
                   {item.text}
