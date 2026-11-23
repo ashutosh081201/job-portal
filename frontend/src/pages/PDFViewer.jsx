@@ -21,7 +21,7 @@ const PDFViewer = () => {
           Back
         </button>
         <span style={{ color: "#94a3b8", fontSize: "13px" }}>Uploaded Resume</span>
-        <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6", fontSize: "13px", textDecoration: "none" }}>
+        <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--c-blue)", fontSize: "13px", textDecoration: "none" }}>
           Open in tab
         </a>
       </div>

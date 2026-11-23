@@ -142,6 +142,17 @@ const checkApplied = async (req, res) => {
   }
 };
 
+// Counts per status across every application in the match, not just one page.
+const countByStatus = async (match) => {
+  const counts = Object.fromEntries(["all", ...STATUSES].map((st) => [st, 0]));
+  const rows = await Application.aggregate([{ $match: match }, { $group: { _id: "$status", count: { $sum: 1 } } }]);
+  for (const { _id, count } of rows) {
+    if (_id in counts) counts[_id] = count;
+    counts.all += count;
+  }
+  return counts;
+};
+
 const getApplicationsByJob = async (req, res) => {
   try {
     assertJobOwner(await Job.findById(req.params.jobId), req.user.id);
@@ -149,13 +160,18 @@ const getApplicationsByJob = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const status = req.query.status && req.query.status !== "all" ? String(req.query.status) : null;
+    if (status && !STATUSES.includes(status)) {
+      throw new HttpError(400, `Status must be one of: all, ${STATUSES.join(", ")}`);
+    }
 
-    const totalApplications = await Application.countDocuments({
-      jobId: req.params.jobId,
-    });
+    const jobMatch = { jobId: new mongoose.Types.ObjectId(req.params.jobId) };
+    const query = status ? { ...jobMatch, status } : jobMatch;
+
+    const totalApplications = await Application.countDocuments(query);
     const totalPages = Math.ceil(totalApplications / limit);
 
-    const applications = await Application.find({ jobId: req.params.jobId })
+    const applications = await Application.find(query)
       .populate("userId", "name email")
       .populate("jobId", "title company")
       .sort({ createdAt: -1, _id: -1 })
@@ -168,6 +184,7 @@ const getApplicationsByJob = async (req, res) => {
       totalApplications,
       totalPages,
       currentPage: page,
+      statusCounts: await countByStatus(jobMatch),
     });
   } catch (error) {
     sendError(res, error);

@@ -79,11 +79,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange, t }) => {
             onClick={() => onPageChange(page)}
             style={{
               ...btnBase,
-              background: page === currentPage ? "#3b82f6" : t.cardBg,
+              background: page === currentPage ? "var(--s-blue)" : t.cardBg,
               color: page === currentPage ? "#fff" : t.muted,
               border:
                 page === currentPage
-                  ? "1px solid #3b82f6"
+                  ? "1px solid var(--c-blue)"
                   : `1px solid ${t.border}`,
               fontWeight: page === currentPage ? "700" : "500",
             }}
@@ -229,7 +229,7 @@ const MyResumes = () => {
           <button
             onClick={handleCreateNew}
             style={{
-              background: "#3b82f6",
+              background: "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
@@ -262,7 +262,7 @@ const MyResumes = () => {
             <button
               onClick={handleCreateNew}
               style={{
-                background: "#3b82f6",
+                background: "var(--s-blue)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
@@ -323,7 +323,7 @@ const MyResumes = () => {
                           <span
                             style={{
                               background: isDark ? "#1e3a5f" : "#dbeafe",
-                              color: "#3b82f6",
+                              color: "var(--c-blue)",
                               padding: "2px 10px",
                               borderRadius: "999px",
                               fontSize: "11px",
@@ -380,7 +380,7 @@ const MyResumes = () => {
                           border: `1px solid ${t.border}`,
                           borderRadius: "6px",
                           padding: isMobile ? "8px 0" : "6px 12px",
-                          color: "#3b82f6",
+                          color: "var(--c-blue)",
                           fontSize: "13px",
                           cursor: "pointer",
                           fontWeight: "500",
@@ -417,7 +417,7 @@ const MyResumes = () => {
                           border: isMobile ? "1px solid #f87171" : "none",
                           borderRadius: "6px",
                           padding: isMobile ? "8px 0" : "6px 4px",
-                          color: "#ef4444",
+                          color: "var(--c-red)",
                           fontSize: "13px",
                           cursor:
                             deleting === resume._id ? "not-allowed" : "pointer",

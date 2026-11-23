@@ -38,9 +38,9 @@ const LocationAutocomplete = ({ value, onChange, inputStyle, isDark, t }) => {
       <input type="text" value={value} onChange={(e) => { onChange(e.target.value); setShowDropdown(true); }} onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 150)} style={{ ...inputStyle, width: "100%" }} placeholder="Type or select city..." autoComplete="off" />
       {showDropdown && filtered.length > 0 && (
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: isDark ? "#1e293b" : "#ffffff", border: "1px solid " + t.border, borderRadius: "8px", zIndex: 300, maxHeight: "200px", overflowY: "auto", marginTop: "4px", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
-          {value && <div onMouseDown={(e) => { e.preventDefault(); onChange(""); setShowDropdown(false); }} style={{ padding: "8px 14px", cursor: "pointer", color: "#ef4444", fontSize: "12px", borderBottom: "1px solid " + t.border }}>Clear location</div>}
+          {value && <div onMouseDown={(e) => { e.preventDefault(); onChange(""); setShowDropdown(false); }} style={{ padding: "8px 14px", cursor: "pointer", color: "var(--c-red)", fontSize: "12px", borderBottom: "1px solid " + t.border }}>Clear location</div>}
           {filtered.map((city, i) => (
-            <div key={city.value} onMouseDown={(e) => { e.preventDefault(); onChange(city.value); setShowDropdown(false); }} style={{ padding: "9px 14px", cursor: "pointer", fontSize: "13px", color: value === city.value ? "#3b82f6" : isDark ? "#e2e8f0" : "#1e293b", background: value === city.value ? (isDark ? "#1e3a5f" : "#dbeafe") : "transparent", borderBottom: i < filtered.length - 1 ? "1px solid " + t.border : "none" }}>
+            <div key={city.value} onMouseDown={(e) => { e.preventDefault(); onChange(city.value); setShowDropdown(false); }} style={{ padding: "9px 14px", cursor: "pointer", fontSize: "13px", color: value === city.value ? "var(--c-blue)" : isDark ? "#e2e8f0" : "#1e293b", background: value === city.value ? (isDark ? "#1e3a5f" : "#dbeafe") : "transparent", borderBottom: i < filtered.length - 1 ? "1px solid " + t.border : "none" }}>
               {city.label}
             </div>
           ))}
@@ -68,7 +68,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, t, isMobile }) => {
       <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} style={{ ...btnBase, background: t.cardBg, color: t.muted, opacity: currentPage === 1 ? 0.4 : 1, cursor: currentPage === 1 ? "not-allowed" : "pointer" }}>Prev</button>
       {getPageNumbers().map((page, i) =>
         page === "..." ? <span key={"dots-" + i} style={{ color: t.muted, fontSize: "14px", padding: "0 4px" }}>...</span>
-        : <button key={page} onClick={() => onPageChange(page)} style={{ ...btnBase, background: page === currentPage ? "#3b82f6" : t.cardBg, color: page === currentPage ? "#fff" : t.muted, border: page === currentPage ? "1px solid #3b82f6" : "1px solid " + t.border, fontWeight: page === currentPage ? "700" : "500" }}>{page}</button>
+        : <button key={page} onClick={() => onPageChange(page)} style={{ ...btnBase, background: page === currentPage ? "var(--s-blue)" : t.cardBg, color: page === currentPage ? "#fff" : t.muted, border: page === currentPage ? "1px solid var(--c-blue)" : "1px solid " + t.border, fontWeight: page === currentPage ? "700" : "500" }}>{page}</button>
       )}
       <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} style={{ ...btnBase, background: t.cardBg, color: t.muted, opacity: currentPage === totalPages ? 0.4 : 1, cursor: currentPage === totalPages ? "not-allowed" : "pointer" }}>Next</button>
     </div>
@@ -213,8 +213,8 @@ const JobListings = () => {
             <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
               <input type="text" value={filters.search} onChange={(e) => handleFilterChange("search", e.target.value)} placeholder="Search jobs..." style={{ ...inputStyle, padding: "10px 14px", fontSize: "14px" }} />
               <div style={{ display: "flex", gap: "8px" }}>
-                <button type="submit" style={{ flex: 1, background: "#3b82f6", color: "#fff", border: "none", borderRadius: "8px", padding: "10px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>Search</button>
-                <button type="button" onClick={() => setShowFilters(!showFilters)} style={{ flex: 1, background: showFilters ? (isDark ? "#1e3a5f" : "#dbeafe") : t.cardBg, color: showFilters ? "#3b82f6" : t.muted, border: "1px solid " + (showFilters ? "#3b82f6" : t.border), borderRadius: "8px", padding: "10px", fontSize: "14px", cursor: "pointer" }}>
+                <button type="submit" style={{ flex: 1, background: "var(--s-blue)", color: "#fff", border: "none", borderRadius: "8px", padding: "10px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>Search</button>
+                <button type="button" onClick={() => setShowFilters(!showFilters)} style={{ flex: 1, background: showFilters ? (isDark ? "#1e3a5f" : "#dbeafe") : t.cardBg, color: showFilters ? "var(--c-blue)" : t.muted, border: "1px solid " + (showFilters ? "var(--c-blue)" : t.border), borderRadius: "8px", padding: "10px", fontSize: "14px", cursor: "pointer" }}>
                   Filters {hasActiveFilters ? "*" : ""}
                 </button>
                 {hasActiveFilters && <button type="button" onClick={handleClear} style={{ background: t.cardBg, color: t.muted, border: "1px solid " + t.border, borderRadius: "8px", padding: "10px 14px", fontSize: "14px", cursor: "pointer" }}>X</button>}
@@ -223,8 +223,8 @@ const JobListings = () => {
           ) : (
             <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
               <input type="text" value={filters.search} onChange={(e) => handleFilterChange("search", e.target.value)} placeholder="Search by title, company or skill..." style={{ ...inputStyle, flex: 1, padding: "10px 14px", fontSize: "14px" }} />
-              <button type="submit" style={{ background: "#3b82f6", color: "#fff", border: "none", borderRadius: "8px", padding: "10px 20px", fontSize: "14px", fontWeight: "600", cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
-              <button type="button" onClick={() => setShowFilters(!showFilters)} style={{ background: showFilters ? (isDark ? "#1e3a5f" : "#dbeafe") : t.cardBg, color: showFilters ? "#3b82f6" : t.muted, border: "1px solid " + (showFilters ? "#3b82f6" : t.border), borderRadius: "8px", padding: "10px 16px", fontSize: "14px", cursor: "pointer", whiteSpace: "nowrap" }}>
+              <button type="submit" style={{ background: "var(--s-blue)", color: "#fff", border: "none", borderRadius: "8px", padding: "10px 20px", fontSize: "14px", fontWeight: "600", cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
+              <button type="button" onClick={() => setShowFilters(!showFilters)} style={{ background: showFilters ? (isDark ? "#1e3a5f" : "#dbeafe") : t.cardBg, color: showFilters ? "var(--c-blue)" : t.muted, border: "1px solid " + (showFilters ? "var(--c-blue)" : t.border), borderRadius: "8px", padding: "10px 16px", fontSize: "14px", cursor: "pointer", whiteSpace: "nowrap" }}>
                 Filters {hasActiveFilters ? "*" : ""}
               </button>
               {hasActiveFilters && <button type="button" onClick={handleClear} style={{ background: t.cardBg, color: t.muted, border: "1px solid " + t.border, borderRadius: "8px", padding: "10px 14px", fontSize: "14px", cursor: "pointer", whiteSpace: "nowrap" }}>Clear</button>}
@@ -246,38 +246,38 @@ const JobListings = () => {
                 </div>
                 <div>
                   <label style={labelStyle}>Work Type</label>
-                  <select value={filters.workType} onChange={(e) => handleFilterChange("workType", e.target.value)} style={selectStyle}>
+                  <select aria-label="Work type" value={filters.workType} onChange={(e) => handleFilterChange("workType", e.target.value)} style={selectStyle}>
                     <option value="">All Types</option>
                     {WORK_TYPES.map(w => <option key={w} value={w}>{w}</option>)}
                   </select>
                 </div>
                 <div>
                   <label style={labelStyle}>Experience Required</label>
-                  <select value={filters.experienceRequired} onChange={(e) => handleFilterChange("experienceRequired", e.target.value)} style={selectStyle}>
+                  <select aria-label="Experience required" value={filters.experienceRequired} onChange={(e) => handleFilterChange("experienceRequired", e.target.value)} style={selectStyle}>
                     <option value="">All Levels</option>
                     {EXPERIENCE_LEVELS.map(e => <option key={e} value={e}>{e}</option>)}
                   </select>
                 </div>
                 <div>
                   <label style={labelStyle}>Salary Range</label>
-                  <select value={filters.salaryRange} onChange={(e) => handleFilterChange("salaryRange", e.target.value)} style={selectStyle}>
+                  <select aria-label="Salary range" value={filters.salaryRange} onChange={(e) => handleFilterChange("salaryRange", e.target.value)} style={selectStyle}>
                     <option value="">All Salaries</option>
                     {SALARY_RANGES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
               </div>
-              <button type="submit" style={{ marginTop: "16px", width: "100%", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "8px", padding: "10px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>Apply Filters</button>
+              <button type="submit" style={{ marginTop: "16px", width: "100%", background: "var(--s-blue)", color: "#fff", border: "none", borderRadius: "8px", padding: "10px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>Apply Filters</button>
             </div>
           )}
         </form>
 
         {hasActiveFilters && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px" }}>
-            {filters.search && <span style={{ background: isDark ? "#1e3a5f" : "#dbeafe", color: "#3b82f6", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>Search: {filters.search}</span>}
-            {filters.skills && <span style={{ background: isDark ? "#14532d" : "#dcfce7", color: "#22c55e", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>Skills: {filters.skills}</span>}
-            {filters.location && <span style={{ background: isDark ? "#422006" : "#fef9c3", color: "#ca8a04", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>Location: {filters.location}</span>}
-            {filters.workType && <span style={{ background: isDark ? "#2e1065" : "#ede9fe", color: "#a855f7", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>{filters.workType}</span>}
-            {filters.experienceRequired && <span style={{ background: isDark ? "#2d1515" : "#fef2f2", color: "#ef4444", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>{filters.experienceRequired}</span>}
+            {filters.search && <span style={{ background: isDark ? "#1e3a5f" : "#dbeafe", color: "var(--c-blue)", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>Search: {filters.search}</span>}
+            {filters.skills && <span style={{ background: isDark ? "#14532d" : "#dcfce7", color: "var(--c-green)", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>Skills: {filters.skills}</span>}
+            {filters.location && <span style={{ background: isDark ? "#422006" : "#fef9c3", color: "var(--c-gold)", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>Location: {filters.location}</span>}
+            {filters.workType && <span style={{ background: isDark ? "#2e1065" : "#ede9fe", color: "var(--c-purple)", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>{filters.workType}</span>}
+            {filters.experienceRequired && <span style={{ background: isDark ? "#2d1515" : "#fef2f2", color: "var(--c-red)", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>{filters.experienceRequired}</span>}
             {filters.salaryRange && <span style={{ background: isDark ? "#14532d" : "#dcfce7", color: "#16a34a", padding: "4px 12px", borderRadius: "999px", fontSize: "12px", fontWeight: "500" }}>{filters.salaryRange}</span>}
           </div>
         )}
@@ -287,8 +287,8 @@ const JobListings = () => {
         ) : jobs.length === 0 ? (
           <div style={{ background: t.cardBg, border: "1px solid " + t.border, borderRadius: "12px", padding: "48px", textAlign: "center" }}>
             <p style={{ fontSize: "32px", margin: "0 0 12px" }}>🔍</p>
-            <p style={{ color: loadError ? "#ef4444" : t.muted, fontSize: "15px", marginBottom: "16px" }}>{loadError || emptyMessage()}</p>
-            {hasActiveFilters && <button onClick={handleClear} style={{ background: "#3b82f6", color: "#fff", border: "none", borderRadius: "8px", padding: "10px 24px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>Clear Filters</button>}
+            <p style={{ color: loadError ? "var(--c-red)" : t.muted, fontSize: "15px", marginBottom: "16px" }}>{loadError || emptyMessage()}</p>
+            {hasActiveFilters && <button onClick={handleClear} style={{ background: "var(--s-blue)", color: "#fff", border: "none", borderRadius: "8px", padding: "10px 24px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>Clear Filters</button>}
           </div>
         ) : (
           <>

@@ -51,7 +51,7 @@ const ViewResume = () => {
           justifyContent: "center",
         }}
       >
-        <p style={{ color: "#64748b", fontSize: "15px" }}>Loading resume...</p>
+        <p style={{ color: "var(--c-muted)", fontSize: "15px" }}>Loading resume...</p>
       </div>
     );
 
@@ -69,7 +69,7 @@ const ViewResume = () => {
         }}
       >
         <p style={{ fontSize: "32px", margin: 0 }}>⚠️</p>
-        <p style={{ color: "#ef4444", fontSize: "15px", margin: 0 }}>{error}</p>
+        <p style={{ color: "var(--c-red)", fontSize: "15px", margin: 0 }}>{error}</p>
       </div>
     );
 
@@ -84,7 +84,7 @@ const ViewResume = () => {
           justifyContent: "center",
         }}
       >
-        <p style={{ color: "#64748b", fontSize: "15px" }}>Resume not found.</p>
+        <p style={{ color: "var(--c-muted)", fontSize: "15px" }}>Resume not found.</p>
       </div>
     );
 

@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { getThemeStyles } from "../../utils/theme";
 import { getDeadlineInfo } from "../../utils/jobs";
+import { visibleResumes, PICKER_PREVIEW } from "../../utils/resumes";
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -21,6 +22,8 @@ const JobDetail = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [savedResumes, setSavedResumes] = useState([]);
+  const [showAllAtsResumes, setShowAllAtsResumes] = useState(false);
+  const [showAllApplyResumes, setShowAllApplyResumes] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState(null);
   const [resumeOption, setResumeOption] = useState("upload");
   const [isSaved, setIsSaved] = useState(false);
@@ -56,7 +59,7 @@ const JobDetail = () => {
 
   const fetchSavedResumes = async () => {
     try {
-      const res = await api.get("/resume/all");
+      const res = await api.get("/resume/all?limit=100");
       if (res.data.resumes?.length > 0) {
         setSavedResumes(res.data.resumes);
         setSelectedResumeId(res.data.resumes[0]._id);
@@ -169,7 +172,7 @@ const JobDetail = () => {
   };
 
   const getScoreColor = (score) =>
-    score >= 70 ? "#22c55e" : score >= 50 ? "#f59e0b" : "#ef4444";
+    score >= 70 ? "var(--c-green)" : score >= 50 ? "var(--c-amber)" : "var(--c-red)";
   const getScoreBg = (score) =>
     score >= 70
       ? isDark
@@ -253,10 +256,10 @@ const JobDetail = () => {
                 alignItems: "center",
                 gap: "6px",
                 background: isSaved ? (isDark ? "#1e3a5f" : "#dbeafe") : "none",
-                border: "1px solid " + (isSaved ? "#3b82f6" : t.border),
+                border: "1px solid " + (isSaved ? "var(--c-blue)" : t.border),
                 borderRadius: "8px",
                 padding: "8px 14px",
-                color: isSaved ? "#3b82f6" : t.muted,
+                color: isSaved ? "var(--c-blue)" : t.muted,
                 fontSize: "14px",
                 cursor: "pointer",
                 fontWeight: isSaved ? "600" : "400",
@@ -300,7 +303,7 @@ const JobDetail = () => {
             {isJobClosed && (
               <span
                 style={{
-                  background: "#ef4444",
+                  background: "var(--s-red)",
                   color: "#fff",
                   fontSize: "11px",
                   fontWeight: "700",
@@ -319,7 +322,7 @@ const JobDetail = () => {
           </p>
           {job.salary && job.salary !== "Not Disclosed" && (
             <p
-              style={{ color: "#22c55e", fontWeight: "600", margin: "4px 0 0" }}
+              style={{ color: "var(--c-green)", fontWeight: "600", margin: "4px 0 0" }}
             >
               {job.salary}
             </p>
@@ -462,7 +465,7 @@ const JobDetail = () => {
                       ? isDark
                         ? "#1e293b"
                         : "#f1f5f9"
-                      : "#a855f7",
+                      : "var(--s-purple)",
                     color: showATSSection ? t.muted : "#fff",
                     border: "none",
                     borderRadius: "8px",
@@ -497,7 +500,7 @@ const JobDetail = () => {
                       marginBottom: "16px",
                     }}
                   >
-                    {savedResumes.map((r, i) => (
+                    {visibleResumes(savedResumes, atsResumeId, showAllAtsResumes).map((r, i) => (
                       <div
                         key={r._id}
                         onClick={() => setAtsResumeId(r._id)}
@@ -510,7 +513,7 @@ const JobDetail = () => {
                               : t.input,
                           border:
                             "1px solid " +
-                            (atsResumeId === r._id ? "#a855f7" : t.inputBorder),
+                            (atsResumeId === r._id ? "var(--c-purple)" : t.inputBorder),
                           borderRadius: "8px",
                           padding: "10px 14px",
                           cursor: "pointer",
@@ -524,7 +527,7 @@ const JobDetail = () => {
                             style={{
                               fontWeight: "600",
                               fontSize: "13px",
-                              color: atsResumeId === r._id ? "#a855f7" : t.text,
+                              color: atsResumeId === r._id ? "var(--c-purple)" : t.text,
                               margin: "0 0 2px",
                             }}
                           >
@@ -534,7 +537,7 @@ const JobDetail = () => {
                                 style={{
                                   marginLeft: "8px",
                                   background: isDark ? "#1e3a5f" : "#dbeafe",
-                                  color: "#3b82f6",
+                                  color: "var(--c-blue)",
                                   padding: "1px 8px",
                                   borderRadius: "999px",
                                   fontSize: "11px",
@@ -546,7 +549,7 @@ const JobDetail = () => {
                           </p>
                           <p
                             style={{
-                              color: t.muted,
+                              color: t.subtext,
                               fontSize: "12px",
                               margin: 0,
                             }}
@@ -555,12 +558,17 @@ const JobDetail = () => {
                           </p>
                         </div>
                         {atsResumeId === r._id && (
-                          <span style={{ color: "#a855f7", fontSize: "16px" }}>
+                          <span style={{ color: "var(--c-purple)", fontSize: "16px" }}>
                             ✓
                           </span>
                         )}
                       </div>
                     ))}
+{savedResumes.length > PICKER_PREVIEW && (
+  <button type="button" onClick={() => setShowAllAtsResumes((v) => !v)} aria-expanded={showAllAtsResumes} style={{ background: "none", border: "1px dashed " + t.border, borderRadius: "8px", padding: "8px", color: "var(--c-blue)", fontSize: "13px", fontWeight: "500", cursor: "pointer" }}>
+    {showAllAtsResumes ? "Show fewer" : `Show all ${savedResumes.length} resumes`}
+  </button>
+)}
                   </div>
 
                   {atsError && (
@@ -570,7 +578,7 @@ const JobDetail = () => {
                         border: "1px solid #f87171",
                         borderRadius: "8px",
                         padding: "10px 12px",
-                        color: "#ef4444",
+                        color: "var(--c-red)",
                         fontSize: "14px",
                         marginBottom: "12px",
                       }}
@@ -584,7 +592,7 @@ const JobDetail = () => {
                     disabled={checkingATS}
                     style={{
                       width: "100%",
-                      background: checkingATS ? "#c4b5fd" : "#a855f7",
+                      background: checkingATS ? "#c4b5fd" : "var(--s-purple)",
                       color: "#fff",
                       border: "none",
                       borderRadius: "8px",
@@ -673,7 +681,7 @@ const JobDetail = () => {
                         >
                           <h3
                             style={{
-                              color: "#22c55e",
+                              color: "var(--c-green)",
                               fontWeight: "600",
                               margin: "0 0 10px",
                               fontSize: "13px",
@@ -693,7 +701,7 @@ const JobDetail = () => {
                                 key={i}
                                 style={{
                                   background: isDark ? "#14532d" : "#dcfce7",
-                                  color: "#22c55e",
+                                  color: "var(--c-green)",
                                   padding: "3px 8px",
                                   borderRadius: "999px",
                                   fontSize: "11px",
@@ -715,7 +723,7 @@ const JobDetail = () => {
                         >
                           <h3
                             style={{
-                              color: "#ef4444",
+                              color: "var(--c-red)",
                               fontWeight: "600",
                               margin: "0 0 10px",
                               fontSize: "13px",
@@ -735,7 +743,7 @@ const JobDetail = () => {
                                 key={i}
                                 style={{
                                   background: isDark ? "#2d1515" : "#fef2f2",
-                                  color: "#ef4444",
+                                  color: "var(--c-red)",
                                   padding: "3px 8px",
                                   borderRadius: "999px",
                                   fontSize: "11px",
@@ -790,7 +798,7 @@ const JobDetail = () => {
                                 }}
                               >
                                 <span
-                                  style={{ color: "#22c55e", flexShrink: 0 }}
+                                  style={{ color: "var(--c-green)", flexShrink: 0 }}
                                 >
                                   •
                                 </span>
@@ -833,7 +841,7 @@ const JobDetail = () => {
                                 }}
                               >
                                 <span
-                                  style={{ color: "#3b82f6", flexShrink: 0 }}
+                                  style={{ color: "var(--c-blue)", flexShrink: 0 }}
                                 >
                                   •
                                 </span>
@@ -856,7 +864,7 @@ const JobDetail = () => {
                         <span
                           onClick={() => navigate("/ats")}
                           style={{
-                            color: "#a855f7",
+                            color: "var(--c-purple)",
                             cursor: "pointer",
                             textDecoration: "underline",
                           }}
@@ -878,7 +886,7 @@ const JobDetail = () => {
             <div
               style={{
                 background: isDark ? "#2e1065" : "#f5f3ff",
-                border: "1px solid #a855f7",
+                border: "1px solid var(--c-purple)",
                 borderRadius: "12px",
                 padding: "16px",
                 marginBottom: "20px",
@@ -886,7 +894,7 @@ const JobDetail = () => {
             >
               <p
                 style={{
-                  color: "#a855f7",
+                  color: "var(--c-purple)",
                   fontWeight: "600",
                   margin: "0 0 4px",
                   fontSize: "14px",
@@ -899,7 +907,7 @@ const JobDetail = () => {
                 <span
                   onClick={() => navigate("/resume/builder")}
                   style={{
-                    color: "#3b82f6",
+                    color: "var(--c-blue)",
                     cursor: "pointer",
                     textDecoration: "underline",
                   }}
@@ -922,7 +930,7 @@ const JobDetail = () => {
               marginBottom: "20px",
             }}
           >
-            <p style={{ color: "#ef4444", fontWeight: "600", margin: 0 }}>
+            <p style={{ color: "var(--c-red)", fontWeight: "600", margin: 0 }}>
               This job is no longer accepting applications
             </p>
           </div>
@@ -933,11 +941,11 @@ const JobDetail = () => {
           <div
             style={{
               background: isDark ? "#14532d" : "#f0fdf4",
-              border: "1px solid #22c55e",
+              border: "1px solid var(--c-green)",
               borderRadius: "12px",
               padding: "16px",
               textAlign: "center",
-              color: "#22c55e",
+              color: "var(--c-green)",
               fontWeight: "600",
             }}
           >
@@ -974,7 +982,7 @@ const JobDetail = () => {
                   border: "1px solid #f87171",
                   borderRadius: "8px",
                   padding: "10px 12px",
-                  color: "#ef4444",
+                  color: "var(--c-red)",
                   fontSize: "14px",
                   marginBottom: "16px",
                 }}
@@ -991,14 +999,14 @@ const JobDetail = () => {
                   borderRadius: "8px",
                   border:
                     "1px solid " +
-                    (resumeOption === "upload" ? "#3b82f6" : t.inputBorder),
+                    (resumeOption === "upload" ? "var(--c-blue)" : t.inputBorder),
                   background:
                     resumeOption === "upload"
                       ? isDark
                         ? "#1e3a5f"
                         : "#dbeafe"
                       : t.input,
-                  color: resumeOption === "upload" ? "#3b82f6" : t.muted,
+                  color: resumeOption === "upload" ? "var(--c-blue)" : t.muted,
                   fontSize: "13px",
                   fontWeight: "500",
                   cursor: "pointer",
@@ -1015,14 +1023,14 @@ const JobDetail = () => {
                     borderRadius: "8px",
                     border:
                       "1px solid " +
-                      (resumeOption === "saved" ? "#22c55e" : t.inputBorder),
+                      (resumeOption === "saved" ? "var(--c-green)" : t.inputBorder),
                     background:
                       resumeOption === "saved"
                         ? isDark
                           ? "#14532d"
                           : "#dcfce7"
                         : t.input,
-                    color: resumeOption === "saved" ? "#22c55e" : t.muted,
+                    color: resumeOption === "saved" ? "var(--c-green)" : t.muted,
                     fontSize: "13px",
                     fontWeight: "500",
                     cursor: "pointer",
@@ -1053,7 +1061,7 @@ const JobDetail = () => {
                     gap: "8px",
                   }}
                 >
-                  {savedResumes.map((r, i) => (
+                  {visibleResumes(savedResumes, selectedResumeId, showAllApplyResumes).map((r, i) => (
                     <div
                       key={r._id}
                       onClick={() => setSelectedResumeId(r._id)}
@@ -1067,7 +1075,7 @@ const JobDetail = () => {
                         border:
                           "1px solid " +
                           (selectedResumeId === r._id
-                            ? "#22c55e"
+                            ? "var(--c-green)"
                             : t.inputBorder),
                         borderRadius: "8px",
                         padding: "12px 16px",
@@ -1083,7 +1091,7 @@ const JobDetail = () => {
                             fontWeight: "600",
                             fontSize: "14px",
                             color:
-                              selectedResumeId === r._id ? "#22c55e" : t.text,
+                              selectedResumeId === r._id ? "var(--c-green)" : t.text,
                             margin: "0 0 2px",
                           }}
                         >
@@ -1093,7 +1101,7 @@ const JobDetail = () => {
                               style={{
                                 marginLeft: "8px",
                                 background: isDark ? "#1e3a5f" : "#dbeafe",
-                                color: "#3b82f6",
+                                color: "var(--c-blue)",
                                 padding: "1px 8px",
                                 borderRadius: "999px",
                                 fontSize: "11px",
@@ -1105,7 +1113,7 @@ const JobDetail = () => {
                         </p>
                         <p
                           style={{
-                            color: t.muted,
+                            color: t.subtext,
                             fontSize: "12px",
                             margin: 0,
                           }}
@@ -1114,17 +1122,22 @@ const JobDetail = () => {
                         </p>
                       </div>
                       {selectedResumeId === r._id && (
-                        <span style={{ color: "#22c55e", fontSize: "18px" }}>
+                        <span style={{ color: "var(--c-green)", fontSize: "18px" }}>
                           ✓
                         </span>
                       )}
                     </div>
                   ))}
+{savedResumes.length > PICKER_PREVIEW && (
+  <button type="button" onClick={() => setShowAllApplyResumes((v) => !v)} aria-expanded={showAllApplyResumes} style={{ background: "none", border: "1px dashed " + t.border, borderRadius: "8px", padding: "8px", color: "var(--c-blue)", fontSize: "13px", fontWeight: "500", cursor: "pointer" }}>
+    {showAllApplyResumes ? "Show fewer" : `Show all ${savedResumes.length} resumes`}
+  </button>
+)}
                 </div>
                 <p
                   onClick={() => navigate("/my-resumes")}
                   style={{
-                    color: "#3b82f6",
+                    color: "var(--c-blue)",
                     fontSize: "12px",
                     cursor: "pointer",
                     marginTop: "8px",
@@ -1172,7 +1185,7 @@ const JobDetail = () => {
               disabled={applying}
               style={{
                 width: "100%",
-                background: applying ? "#93c5fd" : "#3b82f6",
+                background: applying ? "#93c5fd" : "var(--s-blue)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
@@ -1203,7 +1216,7 @@ const JobDetail = () => {
             <button
               onClick={() => navigate("/login")}
               style={{
-                background: "#3b82f6",
+                background: "var(--s-blue)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",

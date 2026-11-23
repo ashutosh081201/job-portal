@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Accessible palette (WCAG AA, 4.5:1). Text shades are darker in light theme and
+   lighter in dark theme; "solid" shades are for buttons and tiles with white text. */
+:root {
+  --c-blue: #1d4ed8; --c-green: #15803d; --c-red: #b91c1c; --c-amber: #b45309;
+  --c-gold: #854d0e; --c-purple: #7e22ce; --c-sky: #0369a1; --c-muted: #526077;
+  --s-blue: #2563eb; --s-green: #15803d; --s-red: #dc2626; --s-amber: #b45309;
+  --s-purple: #7e22ce; --s-sky: #0369a1;
+}
+body.dark-mode {
+  --c-blue: #60a5fa; --c-green: #4ade80; --c-red: #f87171; --c-amber: #fbbf24;
+  --c-gold: #facc15; --c-purple: #c084fc; --c-sky: #38bdf8; --c-muted: #94a3b8;
+}
+
 /* Prevent any component overflow from bleeding across all pages */
 html, body {
   overflow-x: hidden;

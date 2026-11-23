@@ -3,12 +3,12 @@ import { getDeadlineInfo } from "../../utils/jobs";
 
 const JobCard = ({ job, isDark, t, savedJobIds = [], onToggleSave }) => {
   const workTypeBadge = {
-    Remote: { bg: isDark ? "#14532d" : "#dcfce7", color: "#22c55e" },
-    "On-site": { bg: isDark ? "#1e3a5f" : "#dbeafe", color: "#3b82f6" },
-    Hybrid: { bg: isDark ? "#2e1065" : "#ede9fe", color: "#a855f7" },
+    Remote: { bg: isDark ? "#14532d" : "#dcfce7", color: "var(--c-green)" },
+    "On-site": { bg: isDark ? "#1e3a5f" : "#dbeafe", color: "var(--c-blue)" },
+    Hybrid: { bg: isDark ? "#2e1065" : "#ede9fe", color: "var(--c-purple)" },
   };
 
-  const expBadge = { bg: isDark ? "#422006" : "#fef9c3", color: "#ca8a04" };
+  const expBadge = { bg: isDark ? "#422006" : "#fef9c3", color: "var(--c-gold)" };
   const wt = workTypeBadge[job.workType] || workTypeBadge["On-site"];
   const showSalary = job.salary && job.salary !== "Not Disclosed";
   const isSaved = savedJobIds.includes(job._id);
@@ -22,10 +22,10 @@ const JobCard = ({ job, isDark, t, savedJobIds = [], onToggleSave }) => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px", flexWrap: "wrap" }}>
             <h2 style={{ fontSize: "18px", fontWeight: "600", color: t.text, margin: 0 }}>{job.title}</h2>
-            {isClosed && <span style={{ background: "#ef4444", color: "#fff", fontSize: "10px", fontWeight: "700", padding: "2px 8px", borderRadius: "999px", flexShrink: 0 }}>CLOSED</span>}
+            {isClosed && <span style={{ background: "var(--s-red)", color: "#fff", fontSize: "10px", fontWeight: "700", padding: "2px 8px", borderRadius: "999px", flexShrink: 0 }}>CLOSED</span>}
           </div>
           <p style={{ color: t.muted, fontSize: "14px", margin: "0 0 4px" }}>{job.company} • {job.location}</p>
-          {showSalary && <p style={{ color: "#22c55e", fontSize: "14px", fontWeight: "600", margin: 0 }}>{job.salary}</p>}
+          {showSalary && <p style={{ color: "var(--c-green)", fontSize: "14px", fontWeight: "600", margin: 0 }}>{job.salary}</p>}
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "12px", flexShrink: 0 }}>
@@ -33,14 +33,14 @@ const JobCard = ({ job, isDark, t, savedJobIds = [], onToggleSave }) => {
             <button
               onClick={(e) => { e.preventDefault(); onToggleSave(job._id); }}
               title={isSaved ? "Remove from saved" : "Save job"}
-              style={{ background: isSaved ? (isDark ? "#1e3a5f" : "#dbeafe") : "none", border: "1px solid " + (isSaved ? "#3b82f6" : t.border), borderRadius: "8px", padding: "7px 12px", cursor: "pointer", fontSize: "13px", color: isSaved ? "#3b82f6" : t.muted, fontWeight: isSaved ? "600" : "400" }}
+              style={{ background: isSaved ? (isDark ? "#1e3a5f" : "#dbeafe") : "none", border: "1px solid " + (isSaved ? "var(--c-blue)" : t.border), borderRadius: "8px", padding: "7px 12px", cursor: "pointer", fontSize: "13px", color: isSaved ? "var(--c-blue)" : t.muted, fontWeight: isSaved ? "600" : "400" }}
             >
               {isSaved ? "Saved" : "Save"}
             </button>
           )}
           <Link
             to={"/jobs/" + job._id}
-            style={{ background: isClosed ? (isDark ? "#1e293b" : "#f1f5f9") : "#3b82f6", color: isClosed ? t.muted : "#fff", textDecoration: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "600", whiteSpace: "nowrap", border: isClosed ? "1px solid " + t.border : "none" }}
+            style={{ background: isClosed ? (isDark ? "#1e293b" : "#f1f5f9") : "var(--s-blue)", color: isClosed ? t.muted : "#fff", textDecoration: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "600", whiteSpace: "nowrap", border: isClosed ? "1px solid " + t.border : "none" }}
           >
             {isClosed ? "View" : "View Job"}
           </Link>
@@ -54,7 +54,7 @@ const JobCard = ({ job, isDark, t, savedJobIds = [], onToggleSave }) => {
           <span key={i} style={{ background: isDark ? "#1e293b" : "#f1f5f9", color: t.muted, padding: "4px 10px", borderRadius: "999px", fontSize: "12px" }}>{skill}</span>
         ))}
         {deadlineInfo && (
-          <span style={{ background: isDark ? "#1e293b" : "#f8fafc", color: deadlineInfo.color, padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "500", border: "1px solid " + deadlineInfo.color + "50" }}>
+          <span style={{ background: isDark ? "#1e293b" : "#f8fafc", color: deadlineInfo.color, padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "500", border: "1px solid color-mix(in srgb, " + deadlineInfo.color + " 35%, transparent)" }}>
             {deadlineInfo.text}
           </span>
         )}

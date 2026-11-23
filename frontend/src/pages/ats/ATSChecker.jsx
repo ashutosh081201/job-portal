@@ -3,6 +3,7 @@ import api from "../../services/api";
 import { useTheme } from "../../context/ThemeContext";
 import { getThemeStyles } from "../../utils/theme";
 import { useIsMobile } from "../../hooks/useIsMobile";
+import { visibleResumes, PICKER_PREVIEW } from "../../utils/resumes";
 
 const HISTORY_PER_PAGE = 5;
 
@@ -73,11 +74,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange, t }) => {
             onClick={() => onPageChange(page)}
             style={{
               ...btnBase,
-              background: page === currentPage ? "#3b82f6" : t.bg,
+              background: page === currentPage ? "var(--s-blue)" : t.bg,
               color: page === currentPage ? "#fff" : t.muted,
               border:
                 page === currentPage
-                  ? "1px solid #3b82f6"
+                  ? "1px solid var(--c-blue)"
                   : "1px solid " + t.border,
               fontWeight: page === currentPage ? "700" : "500",
             }}
@@ -114,6 +115,7 @@ const ATSChecker = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [resumes, setResumes] = useState([]);
+  const [showAllResumes, setShowAllResumes] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -136,7 +138,7 @@ const ATSChecker = () => {
 
   const fetchResumes = async () => {
     try {
-      const res = await api.get("/resume/all");
+      const res = await api.get("/resume/all?limit=100");
       if (res.data.resumes?.length > 0) {
         setResumes(res.data.resumes);
         setSelectedResumeId(res.data.resumes[0]._id);
@@ -257,7 +259,7 @@ const ATSChecker = () => {
   };
 
   const getScoreColor = (score) =>
-    score >= 70 ? "#22c55e" : score >= 50 ? "#f59e0b" : "#ef4444";
+    score >= 70 ? "var(--c-green)" : score >= 50 ? "var(--c-amber)" : "var(--c-red)";
   const getScoreBg = (score) =>
     score >= 70
       ? isDark
@@ -324,7 +326,7 @@ const ATSChecker = () => {
               style={{
                 background: "none",
                 border: "none",
-                color: "#3b82f6",
+                color: "var(--c-blue)",
                 fontSize: "14px",
                 cursor: "pointer",
                 padding: 0,
@@ -341,20 +343,20 @@ const ATSChecker = () => {
           <div
             style={{
               background: isDark ? "#422006" : "#fffbeb",
-              border: "1px solid #f59e0b",
+              border: "1px solid var(--c-amber)",
               borderRadius: "12px",
               padding: "16px",
               marginBottom: "24px",
             }}
           >
             <p
-              style={{ color: "#f59e0b", fontWeight: "600", margin: "0 0 4px" }}
+              style={{ color: "var(--c-amber)", fontWeight: "600", margin: "0 0 4px" }}
             >
               No resume found
             </p>
             <p style={{ color: t.muted, fontSize: "14px", margin: 0 }}>
               Please build your resume first.{" "}
-              <a href="/resume/builder" style={{ color: "#3b82f6" }}>
+              <a href="/resume/builder" style={{ color: "var(--c-blue)" }}>
                 Build Resume →
               </a>
             </p>
@@ -386,7 +388,7 @@ const ATSChecker = () => {
             <div
               style={{ display: "flex", flexDirection: "column", gap: "8px" }}
             >
-              {resumes.map((r, i) => (
+              {visibleResumes(resumes, selectedResumeId, showAllResumes).map((r, i) => (
                 <div
                   key={r._id}
                   onClick={() => setSelectedResumeId(r._id)}
@@ -399,7 +401,7 @@ const ATSChecker = () => {
                         : t.input,
                     border:
                       "1px solid " +
-                      (selectedResumeId === r._id ? "#22c55e" : t.inputBorder),
+                      (selectedResumeId === r._id ? "var(--c-green)" : t.inputBorder),
                     borderRadius: "8px",
                     padding: "12px 16px",
                     cursor: "pointer",
@@ -413,7 +415,7 @@ const ATSChecker = () => {
                       style={{
                         fontWeight: "600",
                         fontSize: "14px",
-                        color: selectedResumeId === r._id ? "#22c55e" : t.text,
+                        color: selectedResumeId === r._id ? "var(--c-green)" : t.text,
                         margin: "0 0 2px",
                       }}
                     >
@@ -423,7 +425,7 @@ const ATSChecker = () => {
                           style={{
                             marginLeft: "8px",
                             background: isDark ? "#1e3a5f" : "#dbeafe",
-                            color: "#3b82f6",
+                            color: "var(--c-blue)",
                             padding: "1px 8px",
                             borderRadius: "999px",
                             fontSize: "11px",
@@ -434,18 +436,23 @@ const ATSChecker = () => {
                         </span>
                       )}
                     </p>
-                    <p style={{ color: t.muted, fontSize: "12px", margin: 0 }}>
+                    <p style={{ color: t.subtext, fontSize: "12px", margin: 0 }}>
                       {r.personalInfo?.name} • Updated{" "}
                       {new Date(r.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
                   {selectedResumeId === r._id && (
-                    <span style={{ color: "#22c55e", fontSize: "18px" }}>
+                    <span style={{ color: "var(--c-green)", fontSize: "18px" }}>
                       ✓
                     </span>
                   )}
                 </div>
               ))}
+{resumes.length > PICKER_PREVIEW && (
+  <button type="button" onClick={() => setShowAllResumes((v) => !v)} aria-expanded={showAllResumes} style={{ background: "none", border: "1px dashed " + t.border, borderRadius: "8px", padding: "8px", color: "var(--c-blue)", fontSize: "13px", fontWeight: "500", cursor: "pointer" }}>
+    {showAllResumes ? "Show fewer" : `Show all ${resumes.length} resumes`}
+  </button>
+)}
             </div>
           </div>
         )}
@@ -510,7 +517,7 @@ const ATSChecker = () => {
           <p
             style={{
               fontSize: "12px",
-              color: wordCount < 20 ? "#f59e0b" : "#22c55e",
+              color: wordCount < 20 ? "var(--c-amber)" : "var(--c-green)",
               margin: "6px 0 0",
               textAlign: "right",
             }}
@@ -529,7 +536,7 @@ const ATSChecker = () => {
                 borderRadius: "8px",
                 padding: "10px 12px",
                 marginTop: "12px",
-                color: "#ef4444",
+                color: "var(--c-red)",
                 fontSize: "14px",
               }}
             >
@@ -543,7 +550,7 @@ const ATSChecker = () => {
               marginTop: "16px",
               width: "100%",
               background:
-                loading || resumes.length === 0 ? "#93c5fd" : "#3b82f6",
+                loading || resumes.length === 0 ? "#93c5fd" : "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
@@ -647,7 +654,7 @@ const ATSChecker = () => {
                 >
                   <h3
                     style={{
-                      color: "#22c55e",
+                      color: "var(--c-green)",
                       fontWeight: "600",
                       margin: "0 0 14px",
                       fontSize: "15px",
@@ -663,7 +670,7 @@ const ATSChecker = () => {
                         key={i}
                         style={{
                           background: isDark ? "#14532d" : "#dcfce7",
-                          color: "#22c55e",
+                          color: "var(--c-green)",
                           padding: "4px 10px",
                           borderRadius: "999px",
                           fontSize: "12px",
@@ -685,7 +692,7 @@ const ATSChecker = () => {
                 >
                   <h3
                     style={{
-                      color: "#ef4444",
+                      color: "var(--c-red)",
                       fontWeight: "600",
                       margin: "0 0 14px",
                       fontSize: "15px",
@@ -701,7 +708,7 @@ const ATSChecker = () => {
                         key={i}
                         style={{
                           background: isDark ? "#2d1515" : "#fef2f2",
-                          color: "#ef4444",
+                          color: "var(--c-red)",
                           padding: "4px 10px",
                           borderRadius: "999px",
                           fontSize: "12px",
@@ -753,7 +760,7 @@ const ATSChecker = () => {
                           lineHeight: "1.5",
                         }}
                       >
-                        <span style={{ color: "#22c55e", flexShrink: 0 }}>
+                        <span style={{ color: "var(--c-green)", flexShrink: 0 }}>
                           •
                         </span>
                         {s}
@@ -792,7 +799,7 @@ const ATSChecker = () => {
                           lineHeight: "1.5",
                         }}
                       >
-                        <span style={{ color: "#3b82f6", flexShrink: 0 }}>
+                        <span style={{ color: "var(--c-blue)", flexShrink: 0 }}>
                           •
                         </span>
                         {imp}
@@ -884,7 +891,7 @@ const ATSChecker = () => {
                         transition: "border-color 0.15s",
                       }}
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.borderColor = "#a855f7")
+                        (e.currentTarget.style.borderColor = "var(--c-purple)")
                       }
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.borderColor = t.border)
@@ -925,7 +932,7 @@ const ATSChecker = () => {
                           <span
                             style={{
                               marginLeft: "8px",
-                              color: "#a855f7",
+                              color: "var(--c-purple)",
                               fontSize: "11px",
                             }}
                           >
@@ -1047,7 +1054,7 @@ const ATSChecker = () => {
                         transition: "border-color 0.15s",
                       }}
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.borderColor = "#3b82f6")
+                        (e.currentTarget.style.borderColor = "var(--c-blue)")
                       }
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.borderColor = t.border)
@@ -1090,7 +1097,7 @@ const ATSChecker = () => {
                           <span
                             style={{
                               marginLeft: "8px",
-                              color: "#3b82f6",
+                              color: "var(--c-blue)",
                               fontSize: "11px",
                             }}
                           >

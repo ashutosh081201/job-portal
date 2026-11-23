@@ -161,11 +161,11 @@ const Profile = () => {
         : isDark
           ? "#2d1515"
           : "#fef2f2",
-    border: `1px solid ${type === "success" ? "#22c55e" : "#ef4444"}`,
+    border: `1px solid ${type === "success" ? "var(--c-green)" : "var(--c-red)"}`,
     borderRadius: "8px",
     padding: "12px",
     marginBottom: "20px",
-    color: type === "success" ? "#22c55e" : "#ef4444",
+    color: type === "success" ? "var(--c-green)" : "var(--c-red)",
     fontSize: "14px",
   });
 
@@ -229,7 +229,7 @@ const Profile = () => {
               width: "80px",
               height: "80px",
               borderRadius: "50%",
-              background: "#3b82f6",
+              background: "var(--s-blue)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -265,7 +265,7 @@ const Profile = () => {
                     : isDark
                       ? "#14532d"
                       : "#dcfce7",
-                color: user?.role === "recruiter" ? "#3b82f6" : "#22c55e",
+                color: user?.role === "recruiter" ? "var(--c-blue)" : "var(--c-green)",
                 padding: "4px 14px",
                 borderRadius: "999px",
                 fontSize: "12px",
@@ -286,11 +286,11 @@ const Profile = () => {
           >
             {user?.role === "jobseeker" ? (
               <>
-                {statCard(stats.applications, "Applications", "#3b82f6")}
-                {statCard(stats.atsChecks, "ATS Checks", "#a855f7")}
+                {statCard(stats.applications, "Applications", "var(--c-blue)")}
+                {statCard(stats.atsChecks, "ATS Checks", "var(--c-purple)")}
               </>
             ) : (
-              statCard(stats.jobs, "Jobs Posted", "#3b82f6")
+              statCard(stats.jobs, "Jobs Posted", "var(--c-blue)")
             )}
           </div>
         </div>
@@ -311,14 +311,14 @@ const Profile = () => {
               style={{
                 padding: isMobile ? "8px 14px" : "10px 20px",
                 borderRadius: "8px",
-                border: `1px solid ${activeTab === tab.id ? "#3b82f6" : t.border}`,
+                border: `1px solid ${activeTab === tab.id ? "var(--c-blue)" : t.border}`,
                 background:
                   activeTab === tab.id
                     ? isDark
                       ? "#1e3a5f"
                       : "#dbeafe"
                     : t.cardBg,
-                color: activeTab === tab.id ? "#3b82f6" : t.muted,
+                color: activeTab === tab.id ? "var(--c-blue)" : t.muted,
                 fontSize: isMobile ? "13px" : "14px",
                 fontWeight: "500",
                 cursor: "pointer",
@@ -370,6 +370,7 @@ const Profile = () => {
                   <label style={labelStyle}>Email Address</label>
                   <input
                     type="email"
+                    aria-label="Email address"
                     value={profileData.email}
                     style={{
                       ...inputStyle,
@@ -392,6 +393,7 @@ const Profile = () => {
                   <label style={labelStyle}>Role</label>
                   <input
                     type="text"
+                    aria-label="Role"
                     value={user?.role}
                     style={{
                       ...inputStyle,
@@ -415,7 +417,7 @@ const Profile = () => {
                   type="submit"
                   disabled={profileLoading}
                   style={{
-                    background: profileLoading ? "#93c5fd" : "#3b82f6",
+                    background: profileLoading ? "#93c5fd" : "var(--s-blue)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "8px",
@@ -499,7 +501,7 @@ const Profile = () => {
                   type="submit"
                   disabled={passwordLoading}
                   style={{
-                    background: passwordLoading ? "#93c5fd" : "#3b82f6",
+                    background: passwordLoading ? "#93c5fd" : "var(--s-blue)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "8px",
@@ -521,7 +523,7 @@ const Profile = () => {
                 style={{
                   fontSize: "18px",
                   fontWeight: "600",
-                  color: "#ef4444",
+                  color: "var(--c-red)",
                   margin: "0 0 8px",
                 }}
               >
@@ -548,7 +550,7 @@ const Profile = () => {
                   style={{
                     fontSize: "16px",
                     fontWeight: "600",
-                    color: "#ef4444",
+                    color: "var(--c-red)",
                     margin: "0 0 8px",
                   }}
                 >
@@ -569,7 +571,7 @@ const Profile = () => {
                 <button
                   onClick={handleDeleteAccount}
                   style={{
-                    background: "#ef4444",
+                    background: "var(--s-red)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "8px",

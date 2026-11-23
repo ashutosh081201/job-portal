@@ -77,7 +77,7 @@ const ForgotPassword = () => {
               borderRadius: "8px",
               padding: "12px",
               marginBottom: "16px",
-              color: "#ef4444",
+              color: "var(--c-red)",
               fontSize: "14px",
             }}
           >
@@ -123,7 +123,7 @@ const ForgotPassword = () => {
             disabled={loading}
             style={{
               width: "100%",
-              background: loading ? "#93c5fd" : "#3b82f6",
+              background: loading ? "#93c5fd" : "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
@@ -149,7 +149,7 @@ const ForgotPassword = () => {
           <Link
             to="/login"
             style={{
-              color: "#3b82f6",
+              color: "var(--c-blue)",
               textDecoration: "none",
               fontWeight: "500",
             }}

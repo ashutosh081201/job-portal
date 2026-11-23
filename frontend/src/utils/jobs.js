@@ -59,21 +59,21 @@ const LABELS = {
 
 export const getDeadlineInfo = (deadline, status, variant = "card") => {
   const labels = LABELS[variant];
-  if (status === "closed") return { text: labels.closed, color: "#ef4444", isClosed: true };
+  if (status === "closed") return { text: labels.closed, color: "var(--c-red)", isClosed: true };
   const key = deadline ? deadlineKey(deadline) : null;
   if (!key) return null;
   const daysLeft = daysBetween(todayKey(), key);
-  if (daysLeft < 0) return { text: labels.passed, color: "#ef4444", isClosed: true };
-  if (daysLeft === 0) return { text: "Closes today", color: "#ef4444", isClosed: false };
+  if (daysLeft < 0) return { text: labels.passed, color: "var(--c-red)", isClosed: true };
+  if (daysLeft === 0) return { text: "Closes today", color: "var(--c-red)", isClosed: false };
   if (daysLeft <= 3)
     return {
       text: "Closes in " + daysLeft + (daysLeft === 1 ? " day" : " days"),
-      color: "#f59e0b",
+      color: "var(--c-amber)",
       isClosed: false,
     };
   return {
     text: "Closes " + formatDeadline(key, labels.withYear),
-    color: "#64748b",
+    color: "var(--c-muted)",
     isClosed: false,
   };
 };

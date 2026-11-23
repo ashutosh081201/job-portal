@@ -102,7 +102,7 @@ const Register = () => {
               borderRadius: "8px",
               padding: "12px",
               marginBottom: "20px",
-              color: "#ef4444",
+              color: "var(--c-red)",
               fontSize: "14px",
             }}
           >
@@ -169,6 +169,7 @@ const Register = () => {
             </label>
             <select
               name="role"
+              aria-label="I am a"
               value={formData.role}
               onChange={handleChange}
               style={{ ...inputStyle }}
@@ -183,7 +184,7 @@ const Register = () => {
             disabled={loading}
             style={{
               width: "100%",
-              background: loading ? "#93c5fd" : "#3b82f6",
+              background: loading ? "#93c5fd" : "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
@@ -209,7 +210,7 @@ const Register = () => {
           <Link
             to="/login"
             style={{
-              color: "#3b82f6",
+              color: "var(--c-blue)",
               textDecoration: "none",
               fontWeight: "500",
             }}

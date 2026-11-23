@@ -87,11 +87,11 @@ const Pagination = ({
             onClick={() => onPageChange(page)}
             style={{
               ...btnBase,
-              background: page === currentPage ? "#3b82f6" : t.cardBg,
+              background: page === currentPage ? "var(--s-blue)" : t.cardBg,
               color: page === currentPage ? "#fff" : t.muted,
               border:
                 page === currentPage
-                  ? "1px solid #3b82f6"
+                  ? "1px solid var(--c-blue)"
                   : "1px solid " + t.border,
               fontWeight: page === currentPage ? "700" : "500",
             }}
@@ -226,22 +226,22 @@ const JobSeekerDashboard = () => {
 
   const getStatusStyle = (status) => {
     if (status === "pending")
-      return { bg: isDark ? "#422006" : "#fef9c3", color: "#ca8a04" };
+      return { bg: isDark ? "#422006" : "#fef9c3", color: "var(--c-gold)" };
     if (status === "reviewed")
-      return { bg: isDark ? "#1e3a5f" : "#dbeafe", color: "#3b82f6" };
+      return { bg: isDark ? "#1e3a5f" : "#dbeafe", color: "var(--c-blue)" };
     if (status === "shortlisted")
-      return { bg: isDark ? "#14532d" : "#dcfce7", color: "#22c55e" };
+      return { bg: isDark ? "#14532d" : "#dcfce7", color: "var(--c-green)" };
     if (status === "rejected")
-      return { bg: isDark ? "#2d1515" : "#fef2f2", color: "#ef4444" };
+      return { bg: isDark ? "#2d1515" : "#fef2f2", color: "var(--c-red)" };
     return { bg: t.cardBg, color: t.muted };
   };
 
   const statusColor = {
-    all: "#3b82f6",
-    pending: "#ca8a04",
-    reviewed: "#3b82f6",
-    shortlisted: "#22c55e",
-    rejected: "#ef4444",
+    all: "var(--c-blue)",
+    pending: "var(--c-gold)",
+    reviewed: "var(--c-blue)",
+    shortlisted: "var(--c-green)",
+    rejected: "var(--c-red)",
   };
   const filterBtnStyle = (active, color) => ({
     padding: isMobile ? "5px 10px" : "6px 16px",
@@ -309,22 +309,22 @@ const JobSeekerDashboard = () => {
           }}
         >
           {[
-            { to: "/jobs", icon: "🔍", label: "Browse Jobs", bg: "#3b82f6" },
+            { to: "/jobs", icon: "🔍", label: "Browse Jobs", bg: "var(--s-blue)" },
             {
               to: "/resume/builder",
               icon: "📄",
               label: "Resume Builder",
-              bg: "#22c55e",
+              bg: "var(--s-green)",
             },
-            { to: "/ats", icon: "📊", label: "ATS Checker", bg: "#a855f7" },
+            { to: "/ats", icon: "📊", label: "ATS Checker", bg: "var(--s-purple)" },
             {
               to: "/my-resumes",
               icon: "📁",
               label: "My Resumes",
-              bg: "#f59e0b",
+              bg: "var(--s-amber)",
             },
             // ✅ NEW — shortcut: browse jobs to check ATS from job detail
-            { to: "/jobs", icon: "🎯", label: "Job ATS Check", bg: "#0ea5e9" },
+            { to: "/jobs", icon: "🎯", label: "Job ATS Check", bg: "var(--s-sky)" },
           ].map((item, i) => (
             <Link
               key={i}
@@ -377,13 +377,13 @@ const JobSeekerDashboard = () => {
               padding: "10px 20px",
               border: "none",
               background: "none",
-              color: activeTab === "applications" ? "#3b82f6" : t.muted,
+              color: activeTab === "applications" ? "var(--c-blue)" : t.muted,
               fontWeight: activeTab === "applications" ? "700" : "400",
               fontSize: "14px",
               cursor: "pointer",
               borderBottom:
                 activeTab === "applications"
-                  ? "2px solid #3b82f6"
+                  ? "2px solid var(--c-blue)"
                   : "2px solid transparent",
               marginBottom: "-1px",
             }}
@@ -397,13 +397,13 @@ const JobSeekerDashboard = () => {
               padding: "10px 20px",
               border: "none",
               background: "none",
-              color: activeTab === "saved" ? "#3b82f6" : t.muted,
+              color: activeTab === "saved" ? "var(--c-blue)" : t.muted,
               fontWeight: activeTab === "saved" ? "700" : "400",
               fontSize: "14px",
               cursor: "pointer",
               borderBottom:
                 activeTab === "saved"
-                  ? "2px solid #3b82f6"
+                  ? "2px solid var(--c-blue)"
                   : "2px solid transparent",
               marginBottom: "-1px",
             }}
@@ -433,7 +433,7 @@ const JobSeekerDashboard = () => {
                     {s === "all"
                       ? "All"
                       : s.charAt(0).toUpperCase() + s.slice(1)}
-                    <span style={{ marginLeft: "4px", opacity: 0.7 }}>
+                    <span style={{ marginLeft: "4px" }}>
                       ({statusCounts[s] || 0})
                     </span>
                   </button>
@@ -457,7 +457,7 @@ const JobSeekerDashboard = () => {
                 <Link
                   to="/jobs"
                   style={{
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     textDecoration: "none",
                     padding: "10px 24px",
@@ -561,7 +561,7 @@ const JobSeekerDashboard = () => {
                           {app.jobId?.salary && (
                             <p
                               style={{
-                                color: "#22c55e",
+                                color: "var(--c-green)",
                                 fontSize: "13px",
                                 margin: "0 0 4px",
                               }}
@@ -607,7 +607,7 @@ const JobSeekerDashboard = () => {
                           <Link
                             to={"/jobs/" + app.jobId._id}
                             style={{
-                              color: "#3b82f6",
+                              color: "var(--c-blue)",
                               fontSize: "13px",
                               textDecoration: "none",
                             }}
@@ -635,7 +635,7 @@ const JobSeekerDashboard = () => {
                                 "1px solid " + (isDark ? "#4b1515" : "#fecaca"),
                               borderRadius: "6px",
                               padding: "4px 12px",
-                              color: "#ef4444",
+                              color: "var(--c-red)",
                               fontSize: "12px",
                               cursor:
                                 withdrawing === app._id
@@ -706,7 +706,7 @@ const JobSeekerDashboard = () => {
                 <Link
                   to="/jobs"
                   style={{
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     textDecoration: "none",
                     padding: "10px 24px",
@@ -778,7 +778,7 @@ const JobSeekerDashboard = () => {
                             {isClosed && (
                               <span
                                 style={{
-                                  background: "#ef4444",
+                                  background: "var(--s-red)",
                                   color: "#fff",
                                   fontSize: "10px",
                                   fontWeight: "700",
@@ -802,7 +802,7 @@ const JobSeekerDashboard = () => {
                           {job.salary && job.salary !== "Not Disclosed" && (
                             <p
                               style={{
-                                color: "#22c55e",
+                                color: "var(--c-green)",
                                 fontSize: "13px",
                                 margin: "0 0 4px",
                               }}
@@ -838,7 +838,7 @@ const JobSeekerDashboard = () => {
                               ? isDark
                                 ? "#1e293b"
                                 : "#f1f5f9"
-                              : "#3b82f6",
+                              : "var(--s-blue)",
                             color: isClosed ? t.muted : "#fff",
                             textDecoration: "none",
                             padding: "7px 16px",
@@ -856,10 +856,10 @@ const JobSeekerDashboard = () => {
                             to={"/jobs/" + job._id}
                             style={{
                               background: "none",
-                              border: "1px solid #a855f7",
+                              border: "1px solid var(--c-purple)",
                               borderRadius: "8px",
                               padding: "7px 16px",
-                              color: "#a855f7",
+                              color: "var(--c-purple)",
                               textDecoration: "none",
                               fontSize: "13px",
                               fontWeight: "500",

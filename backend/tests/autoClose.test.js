@@ -8,9 +8,17 @@ const Job = require("../models/Job");
 
 useTestDb();
 
-const statusAt = async (deadline, nowIso) => {
+// Jobs can't be created with a deadline in the past, so the recruiter signs up
+// and posts with the clock set to the day before the deadline, then the clock
+// moves on. (Signing up first keeps the login token valid at that date.)
+const recruiterWithJobDueOn = async (deadline) => {
+  freezeClock(new Date(Date.parse(deadline || "2026-10-25") - 864e5).toISOString());
   const r = await signup("recruiter");
-  const job = await createJob(r, { deadline });
+  return createJob(r, { deadline });
+};
+
+const statusAt = async (deadline, nowIso) => {
+  const job = await recruiterWithJobDueOn(deadline);
   freezeClock(nowIso);
   await request(app).get("/api/jobs").expect(200);
   return (await Job.findById(job._id)).status;
@@ -33,8 +41,7 @@ describe(`auto-close at date boundaries (server TZ=${process.env.TZ})`, () => {
   });
 
   test("closed jobs disappear from the public list, getJobById and saved-jobs also trigger the close", async () => {
-    const r = await signup("recruiter");
-    const job = await createJob(r, { deadline: "2026-10-25" });
+    const job = await recruiterWithJobDueOn("2026-10-25");
     freezeClock("2026-10-26T08:00:00Z");
     const list = await request(app).get("/api/jobs").expect(200);
     expect(list.body.totalJobs).toBe(0);
@@ -43,8 +50,7 @@ describe(`auto-close at date boundaries (server TZ=${process.env.TZ})`, () => {
   });
 
   test("a recruiter re-opening a past-deadline job is closed again on the next read", async () => {
-    const r = await signup("recruiter");
-    const job = await createJob(r, { deadline: "2026-10-25" });
+    const job = await recruiterWithJobDueOn("2026-10-25");
     freezeClock("2026-10-27T00:00:00Z");
     await request(app).get("/api/jobs").expect(200);
     await Job.updateOne({ _id: job._id }, { status: "active" });

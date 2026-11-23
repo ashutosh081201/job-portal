@@ -74,7 +74,7 @@ const Navbar = () => {
             letterSpacing: "-0.5px",
           }}
         >
-          Job<span style={{ color: "#3b82f6" }}>Verse</span>
+          Job<span style={{ color: "#60a5fa" }}>Verse</span>
         </Link>
 
         {/* Desktop nav */}
@@ -129,7 +129,7 @@ const Navbar = () => {
                 <Link
                   to="/register"
                   style={{
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     textDecoration: "none",
                     fontSize: "14px",
@@ -155,7 +155,7 @@ const Navbar = () => {
                     width: "36px",
                     height: "36px",
                     borderRadius: "50%",
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     fontWeight: "700",
                     fontSize: "14px",
@@ -167,7 +167,7 @@ const Navbar = () => {
                 <button
                   onClick={handleLogout}
                   style={{
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     border: "none",
                     fontSize: "14px",
@@ -347,7 +347,7 @@ const Navbar = () => {
                   textAlign: "center",
                   padding: "14px",
                   borderRadius: "10px",
-                  background: "#3b82f6",
+                  background: "var(--s-blue)",
                   color: "#fff",
                   textDecoration: "none",
                   fontSize: "15px",
@@ -366,7 +366,7 @@ const Navbar = () => {
                 onClick={handleLogout}
                 style={{
                   width: "100%",
-                  background: "#3b82f6",
+                  background: "var(--s-blue)",
                   color: "#fff",
                   border: "none",
                   fontSize: "15px",

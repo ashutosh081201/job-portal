@@ -88,7 +88,7 @@ const Landing = () => {
           style={{
             display: "inline-block",
             background: isDark ? "#1e3a5f" : "#dbeafe",
-            color: "#3b82f6",
+            color: "var(--c-blue)",
             padding: "6px 18px",
             borderRadius: "999px",
             fontSize: "13px",
@@ -114,7 +114,7 @@ const Landing = () => {
         >
           Find Your Dream Job
           <br />
-          <span style={{ color: "#3b82f6" }}>With AI-Powered Tools</span>
+          <span style={{ color: "var(--c-blue)" }}>With AI-Powered Tools</span>
         </h1>
 
         <p
@@ -142,7 +142,7 @@ const Landing = () => {
           <button
             onClick={handleGetStarted}
             style={{
-              background: "#3b82f6",
+              background: "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "10px",
@@ -317,7 +317,7 @@ const Landing = () => {
                   style={{
                     fontSize: "20px",
                     fontWeight: "700",
-                    color: "#3b82f6",
+                    color: "var(--c-blue)",
                     margin: 0,
                   }}
                 >
@@ -336,7 +336,7 @@ const Landing = () => {
                 >
                   <span
                     style={{
-                      color: "#22c55e",
+                      color: "var(--c-green)",
                       flexShrink: 0,
                       fontWeight: "700",
                       fontSize: "15px",
@@ -362,7 +362,7 @@ const Landing = () => {
                   style={{
                     marginTop: "24px",
                     width: "100%",
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "8px",
@@ -408,7 +408,7 @@ const Landing = () => {
                   style={{
                     fontSize: "20px",
                     fontWeight: "700",
-                    color: "#a855f7",
+                    color: "var(--c-purple)",
                     margin: 0,
                   }}
                 >
@@ -427,7 +427,7 @@ const Landing = () => {
                 >
                   <span
                     style={{
-                      color: "#22c55e",
+                      color: "var(--c-green)",
                       flexShrink: 0,
                       fontWeight: "700",
                       fontSize: "15px",
@@ -453,7 +453,7 @@ const Landing = () => {
                   style={{
                     marginTop: "24px",
                     width: "100%",
-                    background: "#a855f7",
+                    background: "var(--s-purple)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "8px",
@@ -530,7 +530,7 @@ const Landing = () => {
                   display: "inline-block",
                   fontSize: "28px",
                   fontWeight: "800",
-                  color: "#3b82f6",
+                  color: "var(--c-blue)",
                   marginBottom: "14px",
                   fontFamily: "monospace",
                 }}
@@ -595,7 +595,7 @@ const Landing = () => {
           <button
             onClick={() => navigate("/register")}
             style={{
-              background: "#3b82f6",
+              background: "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "10px",

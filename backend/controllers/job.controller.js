@@ -2,8 +2,8 @@ const Job = require("../models/Job");
 const Application = require("../models/Application");
 const SavedJob = require("../models/SavedJob");
 const cleanupCloudinaryFile = require("../utils/cloudinaryCleanup");
-const { autoCloseExpiredJobs } = require("../utils/deadline");
-const { sendError, escapeRegex } = require("../utils/http");
+const { autoCloseExpiredJobs, isDeadlinePassed } = require("../utils/deadline");
+const { HttpError, sendError, escapeRegex } = require("../utils/http");
 
 const LOCATION_ALIASES = {
   bengaluru: "bengaluru|bangalore",
@@ -27,6 +27,16 @@ const getLocationRegex = (location) => {
 // still match even though \b does not fire after "+" or "#".
 const skillRegex = (skill) =>
   new RegExp("(^|[^\\w])" + escapeRegex(skill.trim()) + "($|[^\\w+#])", "i");
+
+const PAST_DEADLINE = "Deadline cannot be in the past - please choose today or a future date";
+
+// "2026-12-11" (or an ISO date) -> Date, or null for empty; throws a 400 for nonsense
+const parseDeadline = (deadline) => {
+  if (!deadline) return null;
+  const d = new Date(deadline);
+  if (Number.isNaN(d.getTime())) throw new HttpError(400, "Invalid deadline");
+  return d;
+};
 
 const inferSalaryRange = (salary) => {
   if (!salary || salary === "Not Disclosed") return "Not Disclosed";
@@ -63,6 +73,8 @@ const createJob = async (req, res) => {
       return res.status(400).json({ message: "Company name is required" });
     if (!location?.trim())
       return res.status(400).json({ message: "Location is required" });
+    const deadlineDate = parseDeadline(deadline);
+    if (isDeadlinePassed(deadlineDate)) return res.status(400).json({ message: PAST_DEADLINE });
     const job = await Job.create({
       title: title.trim(),
       description: description.trim(),
@@ -74,7 +86,7 @@ const createJob = async (req, res) => {
       workType: workType || "On-site",
       experienceRequired: experienceRequired || "Fresher",
       recruiterId: req.user.id,
-      deadline: deadline ? new Date(deadline) : null,
+      deadline: deadlineDate,
       status: "active",
     });
     res.status(201).json({ success: true, job });
@@ -244,12 +256,14 @@ const updateJob = async (req, res) => {
     job.skills = skills || job.skills;
     job.workType = workType || job.workType;
     job.experienceRequired = experienceRequired || job.experienceRequired;
-    job.deadline =
-      deadline !== undefined
-        ? deadline
-          ? new Date(deadline)
-          : null
-        : job.deadline;
+    if (deadline !== undefined) {
+      const next = parseDeadline(deadline);
+      // only a changed deadline must be in the future, so recruiters can still
+      // edit other fields of a job whose deadline has already passed
+      const changed = (next?.getTime() ?? null) !== (job.deadline?.getTime() ?? null);
+      if (changed && isDeadlinePassed(next)) return res.status(400).json({ message: PAST_DEADLINE });
+      job.deadline = next;
+    }
     if (status && ["active", "closed"].includes(status)) job.status = status;
     await job.save();
     res.json({ success: true, job });

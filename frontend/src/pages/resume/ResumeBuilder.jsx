@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import api from "../../services/api";
+import api, { errorMessage } from "../../services/api";
 import JakesTemplate from "../../components/resume/JakesTemplate";
 import { useTheme } from "../../context/ThemeContext";
 import { getThemeStyles } from "../../utils/theme";
@@ -216,13 +216,14 @@ const ResumeBuilder = () => {
   const [saveMsg, setSaveMsg] = useState("");
   const [activeSection, setActiveSection] = useState("personal");
 
+  // Load the exact resume being edited (the list endpoint is paginated, so
+  // searching it missed anything older than the newest few).
   const fetchResumeById = async (id) => {
     try {
-      const res = await api.get("/resume/all");
-      const resume = res.data.resumes.find((r) => r._id === id);
-      if (resume) loadResumeData(resume);
+      const res = await api.get(`/resume/view/${id}`);
+      loadResumeData(res.data.resume);
     } catch (err) {
-      console.error(err);
+      setSaveMsg(errorMessage(err, "Could not load this resume"));
     }
   };
 
@@ -298,6 +299,7 @@ const ResumeBuilder = () => {
   // starts from fresh state and this only has to load an existing one.
   useEffect(() => {
     const editId = new URLSearchParams(location.search).get("id");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load
     if (editId) fetchResumeById(editId);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per mount
   }, []);
@@ -532,6 +534,9 @@ const ResumeBuilder = () => {
       {/* ── Mobile preview overlay ─────────────────────────────────────────── */}
       {isMobile && showMobilePreview && (
         <div
+          tabIndex={0}
+          role="region"
+          aria-label="Resume preview"
           style={{
             position: "fixed",
             top: "60px",
@@ -627,7 +632,7 @@ const ResumeBuilder = () => {
                 <button
                   onClick={() => setShowMobilePreview(true)}
                   style={{
-                    background: "#3b82f6",
+                    background: "var(--s-blue)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "6px",
@@ -678,14 +683,14 @@ const ResumeBuilder = () => {
                 style={{
                   padding: isMobile ? "5px 10px" : "6px 12px",
                   borderRadius: "6px",
-                  border: `1px solid ${activeSection === s.id ? "#3b82f6" : t.inputBorder}`,
+                  border: `1px solid ${activeSection === s.id ? "var(--c-blue)" : t.inputBorder}`,
                   background:
                     activeSection === s.id
                       ? isDark
                         ? "#1e3a5f"
                         : "#dbeafe"
                       : t.input,
-                  color: activeSection === s.id ? "#3b82f6" : t.muted,
+                  color: activeSection === s.id ? "var(--c-blue)" : t.muted,
                   fontSize: isMobile ? "11px" : "12px",
                   fontWeight: "500",
                   cursor: "pointer",
@@ -843,7 +848,7 @@ const ResumeBuilder = () => {
                         style={{
                           background: "none",
                           border: "none",
-                          color: "#ef4444",
+                          color: "var(--c-red)",
                           fontSize: "12px",
                           cursor: "pointer",
                         }}
@@ -862,14 +867,14 @@ const ResumeBuilder = () => {
                           flex: 1,
                           padding: "8px 10px",
                           borderRadius: "7px",
-                          border: `1px solid ${edu.eduType !== "school" ? "#3b82f6" : t.inputBorder}`,
+                          border: `1px solid ${edu.eduType !== "school" ? "var(--c-blue)" : t.inputBorder}`,
                           background:
                             edu.eduType !== "school"
                               ? isDark
                                 ? "#1e3a5f"
                                 : "#dbeafe"
                               : t.input,
-                          color: edu.eduType !== "school" ? "#3b82f6" : t.muted,
+                          color: edu.eduType !== "school" ? "var(--c-blue)" : t.muted,
                           fontSize: "12px",
                           fontWeight: "600",
                           cursor: "pointer",
@@ -884,14 +889,14 @@ const ResumeBuilder = () => {
                           flex: 1,
                           padding: "8px 10px",
                           borderRadius: "7px",
-                          border: `1px solid ${edu.eduType === "school" ? "#3b82f6" : t.inputBorder}`,
+                          border: `1px solid ${edu.eduType === "school" ? "var(--c-blue)" : t.inputBorder}`,
                           background:
                             edu.eduType === "school"
                               ? isDark
                                 ? "#1e3a5f"
                                 : "#dbeafe"
                               : t.input,
-                          color: edu.eduType === "school" ? "#3b82f6" : t.muted,
+                          color: edu.eduType === "school" ? "var(--c-blue)" : t.muted,
                           fontSize: "12px",
                           fontWeight: "600",
                           cursor: "pointer",
@@ -975,6 +980,7 @@ const ResumeBuilder = () => {
                       <div>
                         <label style={labelStyle}>Class</label>
                         <select
+                          aria-label="School type"
                           value={edu.schoolType || "Senior Secondary"}
                           onChange={(e) =>
                             handleEducationChange(
@@ -1046,6 +1052,7 @@ const ResumeBuilder = () => {
                       <div>
                         <label style={labelStyle}>Board (optional)</label>
                         <select
+                          aria-label="Board"
                           value={edu.board || ""}
                           onChange={(e) =>
                             handleEducationChange(i, "board", e.target.value)
@@ -1128,7 +1135,7 @@ const ResumeBuilder = () => {
                         style={{
                           background: "none",
                           border: "none",
-                          color: "#ef4444",
+                          color: "var(--c-red)",
                           fontSize: "12px",
                           cursor: "pointer",
                         }}
@@ -1239,7 +1246,7 @@ const ResumeBuilder = () => {
                         style={{
                           background: "none",
                           border: "none",
-                          color: "#ef4444",
+                          color: "var(--c-red)",
                           fontSize: "12px",
                           cursor: "pointer",
                         }}
@@ -1415,7 +1422,7 @@ const ResumeBuilder = () => {
                           style={{
                             background: "none",
                             border: "none",
-                            color: "#ef4444",
+                            color: "var(--c-red)",
                             fontSize: "12px",
                             cursor: "pointer",
                           }}
@@ -1505,7 +1512,7 @@ const ResumeBuilder = () => {
                           style={{
                             background: "none",
                             border: "none",
-                            color: "#ef4444",
+                            color: "var(--c-red)",
                             fontSize: "12px",
                             cursor: "pointer",
                           }}
@@ -1565,7 +1572,7 @@ const ResumeBuilder = () => {
               disabled={saving}
               style={{
                 flex: 1,
-                background: saving ? "#93c5fd" : "#3b82f6",
+                background: saving ? "#93c5fd" : "var(--s-blue)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
@@ -1585,7 +1592,7 @@ const ResumeBuilder = () => {
               onClick={handleDownload}
               style={{
                 flex: 1,
-                background: "#22c55e",
+                background: "var(--s-green)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
@@ -1604,7 +1611,7 @@ const ResumeBuilder = () => {
               style={{
                 textAlign: "center",
                 fontSize: "14px",
-                color: saveMsg.includes("✅") ? "#22c55e" : "#ef4444",
+                color: saveMsg.includes("✅") ? "var(--c-green)" : "var(--c-red)",
                 marginTop: "8px",
               }}
             >
@@ -1617,6 +1624,10 @@ const ResumeBuilder = () => {
       {/* ── RIGHT — Desktop preview only ───────────────────── */}
       {!isMobile && (
         <div
+          // focusable so keyboard users can scroll the preview
+          tabIndex={0}
+          role="region"
+          aria-label="Resume preview"
           style={{
             width: "50%",
             overflowY: "auto",

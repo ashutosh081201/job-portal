@@ -108,7 +108,7 @@ const VerifyOTP = () => {
               borderRadius: "8px",
               padding: "12px",
               marginBottom: "16px",
-              color: "#ef4444",
+              color: "var(--c-red)",
               fontSize: "14px",
             }}
           >
@@ -120,11 +120,11 @@ const VerifyOTP = () => {
           <div
             style={{
               background: isDark ? "#14532d" : "#f0fdf4",
-              border: "1px solid #22c55e",
+              border: "1px solid var(--c-green)",
               borderRadius: "8px",
               padding: "12px",
               marginBottom: "16px",
-              color: "#22c55e",
+              color: "var(--c-green)",
               fontSize: "14px",
             }}
           >
@@ -173,7 +173,7 @@ const VerifyOTP = () => {
             disabled={loading}
             style={{
               width: "100%",
-              background: loading ? "#93c5fd" : "#3b82f6",
+              background: loading ? "#93c5fd" : "var(--s-blue)",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
@@ -202,7 +202,7 @@ const VerifyOTP = () => {
             style={{
               background: "none",
               border: "none",
-              color: "#3b82f6",
+              color: "var(--c-blue)",
               cursor: resending ? "not-allowed" : "pointer",
               fontSize: "14px",
               fontWeight: "500",

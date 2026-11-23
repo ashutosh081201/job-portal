@@ -101,7 +101,7 @@ const LocationAutocomplete = ({ value, onChange, inputStyle, isDark, t }) => {
                 cursor: "pointer",
                 color:
                   value === city.value
-                    ? "#3b82f6"
+                    ? "var(--c-blue)"
                     : isDark
                       ? "#e2e8f0"
                       : "#1e293b",
@@ -357,7 +357,7 @@ const EditJob = () => {
               borderRadius: "10px",
               border:
                 "1px solid " +
-                (formData.status === "active" ? "#22c55e" : "#f87171"),
+                (formData.status === "active" ? "var(--c-green)" : "#f87171"),
             }}
           >
             <div style={{ flex: 1 }}>
@@ -366,7 +366,7 @@ const EditJob = () => {
                   margin: 0,
                   fontWeight: "600",
                   fontSize: "14px",
-                  color: formData.status === "active" ? "#22c55e" : "#ef4444",
+                  color: formData.status === "active" ? "var(--c-green)" : "var(--c-red)",
                 }}
               >
                 {formData.status === "active"
@@ -374,7 +374,7 @@ const EditJob = () => {
                   : "Closed — Not Accepting Applications"}
               </p>
               <p
-                style={{ margin: "2px 0 0", fontSize: "12px", color: t.muted }}
+                style={{ margin: "2px 0 0", fontSize: "12px", color: t.subtext }}
               >
                 {formData.status === "active"
                   ? "Click to close this job"
@@ -386,7 +386,7 @@ const EditJob = () => {
               disabled={toggling}
               style={{
                 background:
-                  formData.status === "active" ? "#ef4444" : "#22c55e",
+                  formData.status === "active" ? "var(--s-red)" : "var(--s-green)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
@@ -413,7 +413,7 @@ const EditJob = () => {
                 borderRadius: "8px",
                 padding: "12px",
                 marginBottom: "20px",
-                color: "#ef4444",
+                color: "var(--c-red)",
                 fontSize: "14px",
               }}
             >
@@ -465,6 +465,7 @@ const EditJob = () => {
             <div style={{ marginBottom: "16px" }}>
               <label style={labelStyle}>Salary *</label>
               <select
+                aria-label="Salary"
                 value={salaryType}
                 onChange={(e) => {
                   setSalaryType(e.target.value);
@@ -491,7 +492,7 @@ const EditJob = () => {
                 <p
                   style={{
                     fontSize: "11px",
-                    color: "#22c55e",
+                    color: "var(--c-green)",
                     marginTop: "4px",
                   }}
                 >
@@ -505,6 +506,7 @@ const EditJob = () => {
               <input
                 type="date"
                 name="deadline"
+                aria-label="Application deadline"
                 value={formData.deadline}
                 onChange={handleChange}
                 style={inputStyle}
@@ -513,7 +515,7 @@ const EditJob = () => {
                 <p
                   style={{
                     fontSize: "11px",
-                    color: "#ef4444",
+                    color: "var(--c-red)",
                     marginTop: "4px",
                   }}
                 >
@@ -543,6 +545,7 @@ const EditJob = () => {
               <label style={labelStyle}>Work Type *</label>
               <select
                 name="workType"
+                aria-label="Work type"
                 value={formData.workType}
                 onChange={handleChange}
                 style={inputStyle}
@@ -557,6 +560,7 @@ const EditJob = () => {
               <label style={labelStyle}>Experience Required *</label>
               <select
                 name="experienceRequired"
+                aria-label="Experience required"
                 value={formData.experienceRequired}
                 onChange={handleChange}
                 style={inputStyle}
@@ -587,7 +591,7 @@ const EditJob = () => {
               disabled={loading}
               style={{
                 width: "100%",
-                background: loading ? "#93c5fd" : "#3b82f6",
+                background: loading ? "#93c5fd" : "var(--s-blue)",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
